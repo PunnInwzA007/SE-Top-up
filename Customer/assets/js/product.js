@@ -124,11 +124,12 @@ continueBtn?.addEventListener("click",()=>{
 
   const form = document.createElement("form");
   form.method = "POST";
-  form.action = "create_order.php";
+  form.action = "checkout.php";
 
   form.innerHTML = `
   <input type="hidden" name="package_id" value="${selectedPackageId}">
   <input type="hidden" name="uid" value="${uid}">
+  <input type="hidden" name="discount" value="${discount}"> 
   `;
 
   document.body.appendChild(form);

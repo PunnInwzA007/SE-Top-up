@@ -1,162 +1,168 @@
-<?php 
+<?php
 session_start();
 require_once "../config/db.php";
 
 $user_id = $_SESSION['user_id'];
-$order_id = $_GET['order_id'];
-$code = $_GET['code'] ?? '';
-$discount = 0;
 
-/* ======================
-   GET ORDER INFO
-====================== */
-$stmt = $conn->prepare("
-SELECT 
-orders.id,
-orders.price,
-orders.status,
-games.name AS game_name,
-packages.name AS package_name,
-orders.game_uid
-FROM orders
-JOIN packages ON orders.package_id = packages.id
-JOIN games ON packages.game_id = games.id
-WHERE orders.id=? AND orders.user_id=?
-");
-$stmt->bind_param("ii",$order_id,$user_id);
-$stmt->execute();
-$order = $stmt->get_result()->fetch_assoc();
+// 1. จัดการเรื่องส่วนลด (ต้องทำก่อนคำนวณราคา)
+$discount_amount = 0;
+if(isset($_POST['discount'])){
+    $discount_amount = floatval($_POST['discount']);
+    $_SESSION['checkout']['discount'] = $discount_amount;
+} else {
+    $discount_amount = $_SESSION['checkout']['discount'] ?? 0;
+}
 
-if(!$order){
-  die("Order not found");
+// 2. รับค่าจากหน้า Product หรือ Session
+if($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['confirm'])){
+    $_SESSION['checkout']['package_id'] = $_POST['package_id'];
+    $_SESSION['checkout']['uid'] = $_POST['uid'];
+}
+
+$package_id = $_POST['package_id'] ?? ($_SESSION['checkout']['package_id'] ?? null);
+$uid = $_POST['uid'] ?? ($_SESSION['checkout']['uid'] ?? null);
+
+if(!$package_id || !$uid){
+    echo "DEBUG: NO DATA";
+    exit;
 }
 
 /* ======================
-   GET USER BALANCE
+    GET PACKAGE
 ====================== */
 $stmt = $conn->prepare("
-SELECT balance FROM users WHERE id=?
+    SELECT packages.*, games.name AS game_name 
+    FROM packages
+    JOIN games ON packages.game_id = games.id
+    WHERE packages.id=?
 ");
-$stmt->bind_param("i",$user_id);
+$stmt->bind_param("i", $package_id);
+$stmt->execute();
+$package = $stmt->get_result()->fetch_assoc();
+
+if(!$package){ die("Package not found"); }
+
+$base_price = $package['price']; 
+$total_price = max(0, $base_price - $discount_amount); // คำนวณราคาสุทธิ
+
+/* ======================
+    GET USER BALANCE
+====================== */
+$stmt = $conn->prepare("SELECT balance FROM users WHERE id=?");
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
-
 $balance = $user['balance'];
 
 /* ======================
-   CHECK DISCOUNT
-====================== */
-if($code){
-
-  $stmt = $conn->prepare("
-  SELECT * FROM discount_codes 
-  WHERE code=? AND status='ACTIVE'
-  ");
-  $stmt->bind_param("s",$code);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if($row = $result->fetch_assoc()){
-    if($order['price'] >= $row['min_price']){
-      $discount = $row['discount_amount'];
-    }
-  }
-
-}
-
-$final_price = max(0, $order['price'] - $discount);
-
-/* ======================
-   CONFIRM PURCHASE
+    CONFIRM PURCHASE
 ====================== */
 if(isset($_POST['confirm'])){
-   
-   if($order['status'] == 'success'){
-      header("Location: history.php");
-      exit;
-   }
-  if($balance < $final_price){
-    $error = "Insufficient balance";
-  }
-  else{
+    if($balance < $total_price){
+        $error = "เงินไม่พอ";
+    } else {
+        $conn->begin_transaction();
+        try {
+            // 💳 หักเงิน
+            $new_balance = $balance - $total_price;
+            $stmt = $conn->prepare("UPDATE users SET balance=? WHERE id=?");
+            $stmt->bind_param("di", $new_balance, $user_id);
+            $stmt->execute();
 
-    $conn->begin_transaction();
+            // 🧾 สร้าง order
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, package_id, game_uid, price, status) VALUES (?,?,?,?, 'pending')");
+            $stmt->bind_param("iisd", $user_id, $package_id, $uid, $total_price);
+            $stmt->execute();
+            
+            $order_id = $conn->insert_id;
 
-    try{
+            // 📜 บันทึก transaction
+            $stmt = $conn->prepare("INSERT INTO transactions (user_id, type, amount, order_id) VALUES (?,?,?,?)");
+            $type = "purchase"; // 🔥 ประกาศตัวแปร type
+            $amount = -$total_price;
+            $stmt->bind_param("isdi", $user_id, $type, $amount, $order_id);
+            $stmt->execute();
 
-      /* deduct balance */
-      $new_balance = $balance - $final_price;
+            // 4. เพิ่ม Point (10 บาท = 1 Point)
+            $points = floor($total_price / 10);
+            $stmt_points = $conn->prepare("UPDATE users SET points = points + ? WHERE id=?");
+            $stmt_points->bind_param("ii", $points, $user_id);
+            $stmt_points->execute();
 
-      $stmt = $conn->prepare("
-      UPDATE users SET balance=? WHERE id=?
-      ");
-      $stmt->bind_param("di",$new_balance,$user_id);
-      $stmt->execute();
+            $conn->commit();
+            
+            // ล้างส่วนลดเมื่อจ่ายเงินเสร็จ
+            unset($_SESSION['checkout']['discount']);
+            
+            header("Location: history.php");
+            exit;
 
-      /* update order */
-      $stmt = $conn->prepare("
-      UPDATE orders SET status='pending' WHERE id=?
-      ");
-      $stmt->bind_param("i",$order_id);
-      $stmt->execute();
-
-      /* insert transaction */
-      $stmt = $conn->prepare("
-      INSERT INTO transactions (user_id,type,amount,order_id)
-      VALUES (?,?,?,?)
-      ");
-      $type = "purchase";
-      $amount = -$final_price;
-      $stmt->bind_param("isdi",$user_id,$type,$amount,$order_id);
-      $stmt->execute();
-
-      /* ===== GIVE POINT ===== */
-      $points = floor($order['price'] / 10);
-
-      $stmt = $conn->prepare("
-      UPDATE users SET points = points + ? WHERE id=?
-      ");
-      $stmt->bind_param("ii",$points,$user_id);
-      $stmt->execute();
-
-      /* ===== USE DISCOUNT ===== */
-      if($code){
-
-        $stmt = $conn->prepare("
-        UPDATE discount_codes 
-        SET used_count = used_count + 1 
-        WHERE code=?
-        ");
-        $stmt->bind_param("s",$code);
-        $stmt->execute();
-
-        $stmt = $conn->prepare("
-        UPDATE discount_codes 
-        SET status='USED'
-        WHERE code=? AND used_count >= usage_limit
-        ");
-        $stmt->bind_param("s",$code);
-        $stmt->execute();
-      }
-
-      $conn->commit();
-
-      header("Location: history.php");
-      exit();
-
-    }catch(Exception $e){
-
-      $conn->rollback();
-      $error = "Transaction failed";
-
+        } catch (Exception $e) {
+            $conn->rollback();
+            $error = "เกิดข้อผิดพลาด: " . $e->getMessage();
+        }
     }
-
-  }
-
 }
 ?>
-<form method="POST">
-  <button type="submit" name="confirm" class="se-btn-green w-100 mt-3">
-    ยืนยันการชำระเงิน
-  </button>
-</form>
+
+<?php include "partials/header.php"; ?>
+
+<section class="se-section">
+  <div class="se-container">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="se-card p-4">
+          <h5 class="mb-4" style="font-weight:900;">รายละเอียดคำสั่งซื้อ</h5>
+          <div class="mb-3"><strong>เกม:</strong> <?= htmlspecialchars($package['game_name']) ?></div>
+          <div class="mb-3"><strong>แพ็กเกจ:</strong> <?= htmlspecialchars($package['name']) ?></div>
+          <div class="mb-3"><strong>UID:</strong> <?= htmlspecialchars($uid) ?></div>
+          <hr>
+          <span class="badge bg-warning">รอเติม (Pending)</span>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="se-card p-4">
+          <h5 class="mb-4" style="font-weight:900;">สรุปการชำระเงิน</h5>
+          <div class="d-flex justify-content-between mb-2">
+              <span>ราคาปกติ</span>
+              <span>฿<?= number_format($base_price, 2) ?></span>
+          </div>
+          <div class="d-flex justify-content-between mb-2 text-danger">
+              <span>ส่วนลด</span>
+              <span>-฿<?= number_format($discount_amount, 2) ?></span>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between mb-3">
+              <strong>ยอดชำระสุทธิ</strong>
+              <strong class="text-success">฿<?= number_format($total_price, 2) ?></strong>
+          </div>
+          <hr>
+          <div class="mb-3">
+            <span>เงินในบัญชี:</span>
+            <strong>฿<?= number_format($balance,2) ?></strong>
+          </div>
+
+          <?php if(isset($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+          <?php endif; ?>
+
+          <form method="POST">
+            <input type="hidden" name="package_id" value="<?= $package_id ?>">
+            <input type="hidden" name="uid" value="<?= htmlspecialchars($uid) ?>">
+            <button 
+              type="submit" 
+              name="confirm"
+              class="se-btn-green w-100"
+              <?= $balance < $total_price ? 'disabled' : '' ?>
+            >
+              ยืนยันการชำระเงิน
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<?php include "partials/footer.php"; ?>
