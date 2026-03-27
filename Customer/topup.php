@@ -1,3 +1,15 @@
+<?php
+require_once "../config/db.php";
+
+$result = $conn->query("SELECT * FROM games");
+$games = [];
+
+if ($result->num_rows > 0) {
+  while($row = $result->fetch_assoc()) {
+    $games[] = $row;
+  }
+}
+?>
 <?php include "partials/header.php"; ?>
 <!-- ===== PAGE HERO ===== -->
 <section class="se-page-hero">
@@ -22,27 +34,20 @@
     <!-- GRID -->
     <div class="row g-4 se-grid">
 
-      <?php
-      $games = [
-        ["Free Fire","mobile"],
-        ["Roblox","gift"],
-        ["Realm of Valor","mobile"],
-        ["Valorant","pc"],
-        ["Ragnarok Origin","pc"],
-        ["Efootball PES","pc"],
-        ["Seiya EX","mobile"],
-        ["Dota Plus","sub"],
-        ["Steam Points","pc"]
-      ];
+      <?php foreach($games as $game): ?>
+        <div class="col-lg-3 col-md-4 col-6 se-card-item"
+            data-category="game <?= $game['category'] ?>">
 
-      foreach($games as $game):
-      ?>
-      <div class="col-lg-3 col-md-4 col-6 se-card-item" data-category="game <?= $game[1] ?>">
-        <div class="se-card">
-          <div class="se-ph se-ph-wide"></div>
-          <div class="se-card-name"><?= $game[0] ?></div>
+          <a href="packages.php?game_id=<?= $game['id'] ?>" class="se-card-topup">
+
+            <img src="../admin/uploads/<?= basename($game['image']) ?>">
+
+            <div class="se-card-name">
+              <?= htmlspecialchars($game['name']) ?>
+            </div>
+
+          </a>
         </div>
-      </div>
       <?php endforeach; ?>
 
     </div>

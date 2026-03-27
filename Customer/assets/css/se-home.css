@@ -626,3 +626,30 @@ background:#2f6294;
   visibility:visible;
   pointer-events:auto;
 }
+.se-card-topup {
+  display: block;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  text-align: center;
+  transition: all 0.25s ease;
+  border: 1px solid #eee;
+}
+
+.se-card-topup img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.se-card-topup:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+  border-color: #007bff;
+}
+.se-img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
