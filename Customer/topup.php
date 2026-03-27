@@ -38,7 +38,7 @@ if ($result->num_rows > 0) {
         <div class="col-lg-3 col-md-4 col-6 se-card-item"
             data-category="game <?= $game['category'] ?>">
 
-          <a href="packages.php?game_id=<?= $game['id'] ?>" class="se-card-topup">
+          <a href="product.php?game_id=<?= $game['id'] ?>" class="se-card-topup">
 
             <img src="../admin/uploads/<?= basename($game['image']) ?>">
 

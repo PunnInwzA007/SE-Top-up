@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 13, 2026 at 02:38 PM
+-- Generation Time: Mar 27, 2026 at 10:09 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -43,6 +43,34 @@ INSERT INTO `admins` (`id`, `username`, `password`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `discount_codes`
+--
+
+CREATE TABLE `discount_codes` (
+  `id` int NOT NULL,
+  `code` varchar(50) DEFAULT NULL,
+  `discount_amount` decimal(10,2) DEFAULT NULL,
+  `min_price` decimal(10,2) DEFAULT '0.00',
+  `usage_limit` int DEFAULT '1',
+  `used_count` int DEFAULT '0',
+  `status` enum('ACTIVE','USED','EXPIRED') DEFAULT 'ACTIVE',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `discount_codes`
+--
+
+INSERT INTO `discount_codes` (`id`, `code`, `discount_amount`, `min_price`, `usage_limit`, `used_count`, `status`, `created_at`) VALUES
+(1, 'SE20', 20.00, 50.00, 100, 0, 'ACTIVE', '2026-03-27 08:53:39'),
+(2, 'WELCOME50', 50.00, 200.00, 50, 0, 'ACTIVE', '2026-03-27 08:53:39'),
+(3, 'PUNN10', 10.00, 0.00, 999, 0, 'ACTIVE', '2026-03-27 08:53:39'),
+(4, 'FLASH100', 100.00, 500.00, 10, 0, 'ACTIVE', '2026-03-27 08:53:39'),
+(5, 'NEWUSER30', 30.00, 100.00, 1, 0, 'ACTIVE', '2026-03-27 08:53:39');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `games`
 --
 
@@ -51,19 +79,20 @@ CREATE TABLE `games` (
   `name` varchar(100) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `status` enum('ON','OFF') DEFAULT 'ON',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `category` enum('mobile','pc','gift','sub') DEFAULT 'mobile'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `games`
 --
 
-INSERT INTO `games` (`id`, `name`, `image`, `status`, `created_at`) VALUES
-(1, 'ROV', 'uploads/rov.jpg', 'ON', '2026-03-13 03:55:14'),
-(2, 'Free Fire', 'uploads/freefire.png', 'ON', '2026-03-13 03:55:14'),
-(3, 'PUBG Mobile', 'uploads/pubg.jpeg', 'ON', '2026-03-13 03:55:14'),
-(4, 'Genshin Impact', 'uploads/genshin.jpg', 'ON', '2026-03-13 04:09:36'),
-(6, 'P U N N', 'uploads/1773375570_sdsdadas.png', 'ON', '2026-03-13 04:19:30');
+INSERT INTO `games` (`id`, `name`, `image`, `status`, `created_at`, `category`) VALUES
+(1, 'ROV', 'uploads/rov.jpg', 'ON', '2026-03-13 03:55:14', 'mobile'),
+(2, 'Free Fire', 'uploads/freefire.png', 'ON', '2026-03-13 03:55:14', 'mobile'),
+(3, 'PUBG Mobile', 'uploads/pubg.jpeg', 'ON', '2026-03-13 03:55:14', 'mobile'),
+(4, 'Genshin Impact', 'uploads/genshin.jpg', 'ON', '2026-03-13 04:09:36', 'pc'),
+(7, 'P U N N', 'uploads/1773462609_sdsdadas.png', 'ON', '2026-03-14 04:30:09', 'pc');
 
 -- --------------------------------------------------------
 
@@ -86,7 +115,8 @@ CREATE TABLE `game_uids` (
 INSERT INTO `game_uids` (`id`, `user_id`, `game_id`, `uid`, `created_at`) VALUES
 (1, 1, 1, '123456789', '2026-03-13 04:06:13'),
 (2, 1, 1, '987654321', '2026-03-13 04:06:13'),
-(3, 2, 2, '555666777', '2026-03-13 04:06:13');
+(3, 2, 2, '555666777', '2026-03-13 04:06:13'),
+(5, 7, 7, 'PunnNAJA#fyck', '2026-03-25 06:04:08');
 
 -- --------------------------------------------------------
 
@@ -114,8 +144,8 @@ INSERT INTO `orders` (`id`, `user_id`, `package_id`, `game_uid`, `status`, `crea
 (11, 3, 3, '555666777', 'cancel', '2026-03-13 04:04:30', 50.00),
 (12, 1, 4, '888999000', 'success', '2026-03-13 04:04:30', 150.00),
 (15, 4, 8, '800123456', 'success', '2026-03-13 04:11:24', 29.00),
-(16, 4, 9, '800123456', 'success', '2026-03-13 04:11:24', 149.00),
-(17, 4, 10, '800987654', 'success', '2026-03-13 04:11:24', 449.00);
+(16, 4, 9, '800123456', 'success', '2026-03-23 04:11:24', 149.00),
+(17, 4, 10, '800987654', 'success', '2026-03-25 04:11:24', 449.00);
 
 -- --------------------------------------------------------
 
@@ -185,22 +215,28 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `order_id`, `crea
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `username` varchar(50) NOT NULL,
+  `firstname` varchar(50) DEFAULT NULL,
+  `lastname` varchar(50) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `balance` decimal(10,2) DEFAULT '0.00',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `points` int DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `balance`, `created_at`) VALUES
-(1, 'player1', '1234', 'player1@email.com', '0811111111', 500.00, '2026-03-13 04:02:12'),
-(2, 'player2', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12'),
-(3, 'gamerx', '1234', 'gamerx@email.com', '0833333333', 1000.00, '2026-03-13 04:02:12'),
-(4, 'traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00');
+INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `email`, `phone`, `balance`, `created_at`, `points`) VALUES
+(1, 'player1', 'John', 'Smith', '1234', 'player1@email.com', '0811111111', 500.00, '2026-03-13 04:02:12', 0),
+(2, 'player2', 'Mike', 'Johnson', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12', 0),
+(3, 'gamerx', 'Alex', 'Wong', '1234', 'gamerx@email.com', '0833333333', 1000.00, '2026-03-13 04:02:12', 0),
+(4, 'traveler', 'Lumine', 'Traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00', 0),
+(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 20.00, '2026-03-14 04:46:43', 0),
+(6, 'iamveryhandsome', 'sudlor', 'punnpunn', '123456', 'PanyawatFaktim1209@gmail.com', '0984606569', 0.00, '2026-03-14 04:55:25', 0),
+(7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0);
 
 --
 -- Indexes for dumped tables
@@ -211,6 +247,13 @@ INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `balance`, 
 --
 ALTER TABLE `admins`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discount_codes`
+--
+ALTER TABLE `discount_codes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
 
 --
 -- Indexes for table `games`
@@ -267,16 +310,22 @@ ALTER TABLE `admins`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `discount_codes`
+--
+ALTER TABLE `discount_codes`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `games`
 --
 ALTER TABLE `games`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `game_uids`
 --
 ALTER TABLE `game_uids`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `orders`
@@ -300,7 +349,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

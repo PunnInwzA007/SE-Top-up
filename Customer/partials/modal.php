@@ -118,3 +118,17 @@
     </div>
   </div>
 </div>
+
+
+// Custom UID Selection Modal
+<div id="uidModal" class="uid-modal">
+  <div class="uid-modal-content">
+    <h5>เลือก UID</h5>
+
+    <div id="uidList"></div>
+
+    <button onclick="closeUidModal()" class="se-btn-gray w-100 mt-3">
+      ปิด
+    </button>
+  </div>
+</div>

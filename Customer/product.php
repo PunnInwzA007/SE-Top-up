@@ -1,11 +1,32 @@
+<?php 
+require_once "../config/db.php";
+
+$game_id = $_GET['game_id'] ?? 0;
+if (!$game_id || !is_numeric($game_id)) {
+  die("Invalid game");
+}
+$sql = "SELECT * FROM games WHERE id = $game_id";
+$game = $conn->query($sql)->fetch_assoc();
+
+if (!$game) {
+  die("Game not found");
+}
+$sql = "
+SELECT * FROM packages 
+WHERE game_id = $game_id AND status='ON'
+";
+$packages = $conn->query($sql);
+
+?>
 <?php include "partials/header.php"; ?>
 
 <!-- PAGE HERO -->
 <section class="se-page-hero">
   <div class="se-page-hero-inner">
-    <h2 class="se-page-title">Product Name</h2>
-    <p class="se-page-breadcrumb">Home > Top-Up > Product Name</p>
-  </div>
+    <h2 class="se-page-title"><?= htmlspecialchars($game['name']) ?></h2>
+    <p class="se-page-breadcrumb">
+      Home > Top-Up > <?= htmlspecialchars($game['name']) ?>
+    </p>
 </section>
 
 <section class="se-section">
@@ -19,7 +40,9 @@
         <div class="se-card p-4">
           <div class="se-ph se-ph-wide mb-3"></div>
 
-          <h4 style="font-weight:900;">Product Name</h4>
+          <h4 style="font-weight:900;">
+            <?= htmlspecialchars($game['name']) ?>
+          </h4>
 
           <p style="font-size:14px; line-height:1.7;">
             เติม Credit เกม <br>
@@ -39,15 +62,24 @@
         <div class="se-card p-4 mb-4">
           <h5 class="mb-3" style="font-weight:800;">Game ID</h5>
 
-          <input type="text"
-                 class="form-control mb-3"
-                 placeholder="กรอก User ID / UID">
+          <form action="add_uid.php" method="POST">
+  
+            <input type="hidden" name="game_id" value="<?= $game_id ?>">
 
-          <button class="se-btn-green w-100 mb-2">
-            บันทึก ID นี้เป็น ID หลัก
-          </button>
+            <input type="text"
+              name="uid"
+              id="uidInput"
+              class="form-control mb-3"
+              placeholder="กรอก User ID / UID"
+              required>
 
-          <button class="se-btn-gray w-100">
+            <button type="button" id="saveUidBtn" class="se-btn-green w-100 mb-2">
+              บันทึก ID นี้เป็น ID หลัก
+            </button>
+
+          </form>
+
+          <button type="button" id="manageUidBtn" class="se-btn-gray w-100">
             จัดการ ID หลัก
           </button>
         </div>
@@ -95,29 +127,28 @@
             <h5 class="mt-5 mb-3 fw-bold">เลือกแพ็กเกจ</h5>
 
             <div class="row g-3">
+              <input type="hidden" id="selectedPackageId">
+              <?php while($p = $packages->fetch_assoc()): ?>
 
-            <div class="col-6 col-lg-4">
-                <div class="se-package-card" data-price="50">
-                <div class="se-package-name">Package Name</div>
-                <div class="se-package-price">฿50</div>
+                <div class="col-6 col-lg-4">
+                  <div class="se-package-card"
+                      data-price="<?= $p['price'] ?>"
+                      data-id="<?= $p['id'] ?>">
+
+                    <div class="se-package-name">
+                      <?= htmlspecialchars($p['name']) ?>
+                    </div>
+
+                    <div class="se-package-price">
+                      ฿<?= number_format($p['price'],2) ?>
+                    </div>
+
+                  </div>
                 </div>
+
+              <?php endwhile; ?>
             </div>
 
-            <div class="col-6 col-lg-4">
-                <div class="se-package-card" data-price="100">
-                <div class="se-package-name">Package Name</div>
-                <div class="se-package-price">฿100</div>
-                </div>
-            </div>
-
-            <div class="col-6 col-lg-4">
-                <div class="se-package-card" data-price="200">
-                <div class="se-package-name">Package Name</div>
-                <div class="se-package-price">฿200</div>
-                </div>
-            </div>
-
-            </div>
 
           <!-- DISCOUNT -->
             <div class="se-product-section">
@@ -147,7 +178,7 @@
 
             <div class="se-summary-row">
               <span>ส่วนลด</span>
-              <span>-฿0</span>
+              <span>-฿<span id="discountPrice">0</span></span>
             </div>
 
             <div class="se-total">

@@ -4,25 +4,32 @@ const packages = document.querySelectorAll(".se-package-card");
 const productPriceEl = document.getElementById("productPrice");
 const totalPriceEl   = document.getElementById("totalPrice");
 const continueBtn    = document.getElementById("continueBtn");
+const discountEl     = document.getElementById("discountPrice");
+
+const discountInput = document.getElementById("discountInput");
+const applyBtn      = document.getElementById("applyDiscount");
 
 let selectedPrice = 0;
 let selectedPayment = null;
+let selectedPackageId = null;
 let discount = 0;
 
-// ===== FORMAT MONEY =====
+// ===== FORMAT =====
 function formatMoney(num){
   return num.toLocaleString("th-TH");
 }
 
-// ===== UPDATE TOTAL =====
+// ===== UPDATE =====
 function updateTotal(){
-  const total = selectedPrice - discount;
+  const total = Math.max(0, selectedPrice - discount);
 
   if(productPriceEl) productPriceEl.innerText = formatMoney(selectedPrice);
   if(totalPriceEl) totalPriceEl.innerText = formatMoney(total);
+  if(discountEl) discountEl.innerText = formatMoney(discount);
 
-  // enable ปุ่มเมื่อครบ
-  if(selectedPrice > 0 && selectedPayment){
+  const uid = document.getElementById("uidInput")?.value;
+
+  if(selectedPrice > 0 && selectedPayment && uid){
     continueBtn?.removeAttribute("disabled");
   }else{
     continueBtn?.setAttribute("disabled",true);
@@ -47,22 +54,162 @@ packages.forEach(card=>{
     card.classList.add("active");
 
     selectedPrice = parseInt(card.dataset.price);
+    selectedPackageId = card.dataset.id;
+
+    document.getElementById("selectedPackageId").value = selectedPackageId;
+
+    // 🔥 RESET DISCOUNT
+    discount = 0;
+
+    const discountInput = document.getElementById("discountInput");
+    if(discountInput){
+      discountInput.value = "";
+    }
+    updateTotal();
+    packages.forEach(c=>c.classList.remove("active"));
+    card.classList.add("active");
+
+    selectedPrice = parseInt(card.dataset.price);
+    selectedPackageId = card.dataset.id;
+
+    document.getElementById("selectedPackageId").value = selectedPackageId;
+
     updateTotal();
   });
 });
 
-// ===== DISCOUNT (ถ้ามีช่องกรอก) =====
-const discountInput = document.getElementById("discountInput");
-const applyBtn = document.getElementById("applyDiscount");
-
+// ===== DISCOUNT =====
 applyBtn?.addEventListener("click",()=>{
+
   const value = discountInput.value.trim();
 
-  if(value === "SE2026"){
-    discount = 20; // ลด 20 บาท
-  }else{
-    discount = 0;
+  if(!value || selectedPrice <= 0){
+    return;
   }
 
-  updateTotal();
+  fetch(`check_discount.php?code=${value}&price=${selectedPrice}`)
+    .then(res => res.json())
+    .then(data => {
+
+      if(data.success){
+        discount = parseInt(data.amount);
+      }else{
+        discount = 0;
+      }
+
+      updateTotal();
+    });
+
 });
+
+// ===== CONTINUE =====
+continueBtn?.addEventListener("click",()=>{
+
+  const uid = document.getElementById("uidInput")?.value;
+
+  if(!uid){
+    alert("กรอก UID ก่อน");
+    return;
+  }
+
+  if(!selectedPackageId){
+    alert("เลือกแพ็กเกจก่อน");
+    return;
+  }
+
+  if(!selectedPayment){
+    alert("เลือกช่องทางชำระเงินก่อน");
+    return;
+  }
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = "create_order.php";
+
+  form.innerHTML = `
+  <input type="hidden" name="package_id" value="${selectedPackageId}">
+  <input type="hidden" name="uid" value="${uid}">
+  `;
+
+  document.body.appendChild(form);
+  form.submit();
+});
+
+const saveBtn = document.getElementById("saveUidBtn");
+
+saveBtn?.addEventListener("click", () => {
+  const uid = document.getElementById("uidInput").value;
+  const gameId = new URLSearchParams(window.location.search).get("game_id");
+
+  if(!uid){
+    alert("กรอก UID ก่อน");
+    return;
+  }
+
+  fetch("add_uid.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: `uid=${encodeURIComponent(uid)}&game_id=${gameId}`
+  })
+  .then(() => {
+    alert("บันทึก UID เป็น ID หลักแล้ว");
+  });
+});
+
+const manageBtn = document.getElementById("manageUidBtn");
+const uidModal = document.getElementById("uidModal");
+const uidList = document.getElementById("uidList");
+
+function closeUidModal(){
+  uidModal.style.display = "none";
+}
+
+manageBtn?.addEventListener("click", () => {
+
+  const gameId = new URLSearchParams(window.location.search).get("game_id");
+
+  fetch(`get_uids.php?game_id=${gameId}`)
+    .then(res => res.json())
+    .then(data => {
+
+      const tbody = document.querySelector("#uidModal table tbody");
+
+      if(!tbody) return;
+
+      tbody.innerHTML = "";
+
+      if(data.length === 0){
+        tbody.innerHTML = "<tr><td colspan='3'>ยังไม่มี UID</td></tr>";
+      }
+
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+          <td>-</td>
+          <td style="cursor:pointer;color:blue;">${item.uid}</td>
+          <td>-</td>
+        `;
+
+        tr.addEventListener("click", () => {
+          document.getElementById("uidInput").value = item.uid;
+          updateTotal();
+          
+          const modal = bootstrap.Modal.getInstance(document.getElementById("uidModal"));
+          modal.hide();
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      const modal = new bootstrap.Modal(document.getElementById("uidModal"));
+      modal.show();
+
+    });
+
+});
+
+// ===== UID INPUT =====
+document.getElementById("uidInput")?.addEventListener("input", updateTotal);
