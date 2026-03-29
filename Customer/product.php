@@ -39,7 +39,7 @@ $packages = $conn->query($sql);
       <div class="col-lg-4">
 
         <div class="se-card p-4">
-          <div class="se-ph se-ph-wide mb-3"></div>
+          <img src="../admin/<?= htmlspecialchars($game['image']) ?>" class="se-ph se-ph-wide mb-3" alt="<?= htmlspecialchars($game['name']) ?>">
 
           <h4 style="font-weight:900;">
             <?= htmlspecialchars($game['name']) ?>

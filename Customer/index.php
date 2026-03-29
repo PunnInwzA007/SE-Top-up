@@ -87,7 +87,7 @@ function mapCategoryName($cat){
 
       <div class="col-lg-6">
         <div class="se-hero-right">
-          <div class="se-ph se-ph-square"></div>
+          <img class="se-ph se-ph-square" src="../admin/uploads/heropic.jpg"></div>
         </div>
       </div>
     </div>
@@ -100,25 +100,25 @@ function mapCategoryName($cat){
     <div class="row g-3">
       <div class="col-6 col-lg-3">
         <div class="se-feature-card">
-          <div class="se-ph se-ph-icon"></div>
+          <img class="se-hr se-hr-heroicon" src="../admin/uploads/fasttop.jpg" alt="Fast Top-up">
           <div class="se-feature-text">เติมไวทันใจ</div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="se-feature-card">
-          <div class="se-ph se-ph-icon"></div>
+          <img class="se-hr se-hr-heroicon" src="../admin/uploads/sectop.jpg" alt="Fast Top-up">
           <div class="se-feature-text">ปลอดภัย 100%</div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="se-feature-card">
-          <div class="se-ph se-ph-icon"></div>
+          <img class="se-hr se-hr-heroicon" src="../admin/uploads/histop.jpg" alt="Fast Top-up">
           <div class="se-feature-text">ประวัติครบทุกออเดอร์</div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="se-feature-card">
-          <div class="se-ph se-ph-icon"></div>
+          <img class="se-hr se-hr-heroicon" src="../admin/uploads/pointtop.jpg" alt="Fast Top-up">
           <div class="se-feature-text">แต้มสะสมแลกรางวัล</div>
         </div>
       </div>
@@ -195,7 +195,7 @@ function mapCategoryName($cat){
         <a class="se-card-link" href="topup.php?category=mobile">
           <div class="se-cat">
             <div class="se-cat-title">Mobile Games</div>
-            <div class="se-ph se-ph-square"></div>
+            <img src="../admin/uploads/mobilegames.jpg" class="se-ph se-ph-square">
           </div>
         </a>
       </div>
@@ -204,7 +204,7 @@ function mapCategoryName($cat){
         <a class="se-card-link" href="topup.php?category=pc">
           <div class="se-cat">
             <div class="se-cat-title">PC Games</div>
-            <div class="se-ph se-ph-square"></div>
+            <img src="../admin/uploads/pcgames.jpg" class="se-ph se-ph-square">
           </div>
         </a>
       </div>
@@ -213,7 +213,7 @@ function mapCategoryName($cat){
         <a class="se-card-link" href="topup.php?category=sub">
           <div class="se-cat">
             <div class="se-cat-title">Subscriptions</div>
-            <div class="se-ph se-ph-square"></div>
+            <img src="../admin/uploads/subscriptions.jpg" class="se-ph se-ph-square">
           </div>
         </a>
       </div>
@@ -222,14 +222,14 @@ function mapCategoryName($cat){
         <a class="se-card-link" href="topup.php?category=gift">
           <div class="se-cat">
             <div class="se-cat-title">Gift Cards</div>
-            <div class="se-ph se-ph-square"></div>
-          </div>
+              <img src="../admin/uploads/giftcard.jpg" class="se-ph se-ph-square">
+            </div>
         </a>
       </div>
     </div>
 
     <div class="se-cta">
-      <div class="se-ph se-ph-cta"></div>
+      <div class="se-ph se-ph-cta"><img src="../admin/uploads/BackG.jpg"></div>
 
       <div class="se-cta-card se-cta-left">
         <div class="se-cta-tag">SE TOPUP</div>
