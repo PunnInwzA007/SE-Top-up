@@ -1,4 +1,46 @@
-<?php require_once "auth.php"; ?>
+<?php 
+require_once "../config/db.php";
+require_once "auth.php"; 
+
+$user_id = $_SESSION['user_id'];
+
+/* ===== POINT ===== */
+$stmt = $conn->prepare("
+  SELECT SUM(price) as total
+  FROM orders
+  WHERE user_id=? AND status='success'
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+
+$result = $stmt->get_result()->fetch_assoc();
+$total = $result['total'] ?? 0;
+$points = floor($total / 10);
+
+/* ===== REWARDS ===== */
+$rewardResult = $conn->query("SELECT * FROM rewards ORDER BY point_cost ASC");
+
+/* map type -> category (ใช้กับ filter เดิม) */
+function mapCategory($type){
+  return match($type){
+    'balance' => 'coupon',
+    'code' => 'bonus',
+    'giftcard' => 'gift',
+    default => 'other'
+  };
+}
+/* ===== HISTORY ===== */
+$stmt = $conn->prepare("
+  SELECT ur.*, r.name, r.point_cost
+  FROM user_rewards ur
+  JOIN rewards r ON ur.reward_id = r.id
+  WHERE ur.user_id = ?
+  ORDER BY ur.created_at DESC
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$historyResult = $stmt->get_result();
+?>
 <?php include "partials/header.php"; ?>
 <!-- PAGE HERO -->
 <section class="se-page-hero">
@@ -15,7 +57,7 @@
     <div class="se-point-box mb-5">
       <!-- กล่องแต้ม -->
       <div class="se-point-left">
-        <h2>6769</h2>
+        <h2><?= $points ?></h2>
         <span>Points</span>
       </div>
 
@@ -37,26 +79,36 @@
     <!-- GRID -->
     <div class="row g-4 se-grid">
 
-      <?php
-      $rewards = [
-        ["Coupon 10฿","coupon"],
-        ["Coupon 20฿","coupon"],
-        ["Bonus Diamonds +20","bonus"],
-        ["Gift Card 100฿","gift"]
-      ];
+      <?php if($rewardResult->num_rows > 0): ?>
+        <?php while($r = $rewardResult->fetch_assoc()): ?>
+          <?php $category = mapCategory($r['type']); ?>
 
-      foreach($rewards as $r):
-      ?>
+            <div class="col-lg-3 col-md-4 col-6 se-card-item"
+                data-category="<?= $category ?>">
 
-      <div class="col-lg-3 col-md-4 col-6 se-card-item"
-           data-category="<?= $r[1] ?>">
-        <div class="se-card">
-          <div class="se-ph se-ph-wide"></div>
-          <div class="se-card-name"><?= $r[0] ?></div>
-        </div>
-      </div>
+              <!-- ✅ กดได้ทุกอัน -->
+              <a href="redeem.php?id=<?= $r['id'] ?>" class="se-card-topup">
 
-      <?php endforeach; ?>
+                <img src="../admin/uploads/<?= htmlspecialchars($r['image']) ?>">
+
+                <div class="se-card-name">
+                  <?= htmlspecialchars($r['name']) ?>
+                </div>
+
+                <div style="text-align:center;margin-top:6px;">
+                  <span class="se-point-badge">
+                    <?= number_format($r['point_cost']) ?> Points
+                  </span>
+                </div>
+
+              </a>
+
+            </div>
+
+        <?php endwhile; ?>
+      <?php else: ?>
+        <p style="text-align:center;">ยังไม่มี reward</p>
+      <?php endif; ?>
 
     </div>
 
@@ -78,18 +130,33 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>12/02/2026</td>
-                <td>คูปอง 10฿</td>
-                <td>-100</td>
-                <td><span class="badge bg-success">สำเร็จ</span></td>
-              </tr>
-              <tr>
-                <td>10/02/2026</td>
-                <td>คูปอง 10฿</td>
-                <td>-100</td>
-                <td><span class="badge bg-danger">ยกเลิก</span></td>
-              </tr>
+              <?php if($historyResult->num_rows > 0): ?>
+                
+                <?php while($h = $historyResult->fetch_assoc()): ?>
+                  <tr>
+                    <!-- วันที่ -->
+                    <td><?= date("d/m/Y", strtotime($h['created_at'])) ?></td>
+
+                    <!-- ชื่อ reward -->
+                    <td><?= htmlspecialchars($h['name']) ?></td>
+
+                    <!-- แต้ม -->
+                    <td>-<?= number_format($h['point_cost']) ?></td>
+
+                    <!-- สถานะ -->
+                    <td>
+                      <span class="badge bg-<?= $h['status']=='success'?'success':'danger' ?>">
+                        <?= $h['status']=='success'?'สำเร็จ':'ยกเลิก' ?>
+                      </span>
+                    </td>
+                  </tr>
+                <?php endwhile; ?>
+
+              <?php else: ?>
+                <tr>
+                  <td colspan="4" style="text-align:center;">ยังไม่มีประวัติ</td>
+                </tr>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>

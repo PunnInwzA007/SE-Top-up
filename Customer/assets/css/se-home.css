@@ -684,3 +684,16 @@ background:#2f6294;
 .uid-item:hover {
   background:#f5f5f5;
 }
+.se-point-badge {
+  display: inline-block;
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.se-card-topup:hover {
+  transform: translateY(-5px) scale(1.03);
+  cursor:pointer;
+}
