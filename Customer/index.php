@@ -15,11 +15,22 @@
             สามารถเติมได้ 24 ชั่วโมง พร้อมโปรโมชั่นและแต้มสะสม
           </p>
 
-          <div class="se-search">
+          <div class="se-search" style="position:relative;">
+            
             <form action="topup.php" method="GET">
-              <input type="text" name="search" placeholder="ค้นหาเกม..." />
+              <input 
+                type="text" 
+                name="search" 
+                id="searchInput"
+                placeholder="ค้นหาเกม..." 
+                autocomplete="off"
+              />
               <button type="submit">Search</button>
             </form>
+
+            <!-- ❗ แยกออกมานอก form -->
+            <div id="searchResult" class="search-dropdown"></div>
+
           </div>
         </div>
       </div>
@@ -185,5 +196,5 @@
       </div>
   </div>
 </section>
-
+<script src="se-home.js"></script>
 <?php include "partials/footer.php"; ?>

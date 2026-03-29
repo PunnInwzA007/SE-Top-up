@@ -697,3 +697,57 @@ background:#2f6294;
   transform: translateY(-5px) scale(1.03);
   cursor:pointer;
 }
+/* กล่องหลัก */
+.search-dropdown {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: #ffffff; /* สีเข้มแบบ Steam */
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden;
+  z-index: 9999;
+  display: none;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.search-header {
+  padding: 10px 15px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #858d92;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+/* รายการเกม */
+.search-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  gap: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  color: #000000;
+}
+
+.search-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-item img {
+  width: 80px; /* ทรงสี่เหลี่ยมผืนผ้าแบบ Steam */
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.search-item-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.search-item-tag {
+  font-size: 11px;
+  color: #22c55e; /* สีเขียวบอกสถานะ หรือราคา */
+}
