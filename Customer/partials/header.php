@@ -4,6 +4,22 @@ if(session_status() === PHP_SESSION_NONE){
 }
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
+<?php
+require_once __DIR__ . '/../../config/db.php';
+$balance = 0;
+if(isset($_SESSION['user_id'])){
+  $uid = $_SESSION['user_id'];
+
+  $stmt = $conn->prepare("SELECT balance FROM users WHERE id = ?");
+  $stmt->bind_param("i", $uid);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if($row = $result->fetch_assoc()){
+    $balance = $row['balance'];
+  }
+}
+?>
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -56,16 +72,32 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end">
+
+              <!-- 💰 BALANCE -->
+              <li class="px-3 py-2">
+                 เงินคงเหลือ: <strong><?= number_format($balance, 2) ?> บาท</strong>
+              </li>
+              <!-- 🎁 REDEEM -->
+              <li><hr class="dropdown-divider"></li>
+
               <li>
                 <a class="dropdown-item" href="profile.php">Profile</a>
               </li>
+
               <li>
                 <a class="dropdown-item" href="history.php">เติมเงิน</a>
               </li>
+
+              <li>
+                <a class="dropdown-item" href="coderedeem.php">Redeem</a>
+              </li>
+
               <li><hr class="dropdown-divider"></li>
+
               <li>
                 <a class="dropdown-item text-danger" href="logout.php">Logout</a>
               </li>
+
             </ul>
           </div>
 
