@@ -5,17 +5,12 @@ require_once "auth.php";
 $user_id = $_SESSION['user_id'];
 
 /* ===== POINT ===== */
-$stmt = $conn->prepare("
-  SELECT SUM(price) as total
-  FROM orders
-  WHERE user_id=? AND status='success'
-");
+$stmt = $conn->prepare("SELECT points FROM users WHERE id=?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 
 $result = $stmt->get_result()->fetch_assoc();
-$total = $result['total'] ?? 0;
-$points = floor($total / 10);
+$points = $result['points'] ?? 0;
 
 /* ===== REWARDS ===== */
 $rewardResult = $conn->query("SELECT * FROM rewards ORDER BY point_cost ASC");
