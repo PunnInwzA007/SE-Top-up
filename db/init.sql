@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 29, 2026 at 08:07 AM
+-- Generation Time: Mar 29, 2026 at 09:54 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -108,7 +108,8 @@ INSERT INTO `discount_codes` (`id`, `code`, `discount_amount`, `min_price`, `usa
 (18, 'SE4231', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-28 12:28:40'),
 (19, 'SE6438', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 06:28:15'),
 (20, 'SE6844', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 08:01:55'),
-(21, 'SE1467', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 08:02:00');
+(21, 'SE1467', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 08:02:00'),
+(22, 'SE4539', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 09:53:38');
 
 -- --------------------------------------------------------
 
@@ -408,7 +409,7 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (2, 'player2', 'Mike', 'Johnson', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12', 0),
 (3, 'gamerx', 'Alex', 'Wong', '1234', 'gamerx@email.com', '0833333333', 1200.00, '2026-03-13 04:02:12', 800),
 (4, 'traveler', 'Lumine', 'Traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00', 0),
-(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 3220.00, '2026-03-14 04:46:43', 878),
+(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 3220.00, '2026-03-14 04:46:43', 778),
 (6, 'iamveryhandsome', 'sudlor', 'punnpunn', '123456', 'PanyawatFaktim1209@gmail.com', '0984606569', 0.00, '2026-03-14 04:55:25', 0),
 (7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0);
 
@@ -550,7 +551,7 @@ ALTER TABLE `bonus_codes`
 -- AUTO_INCREMENT for table `discount_codes`
 --
 ALTER TABLE `discount_codes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `games`
