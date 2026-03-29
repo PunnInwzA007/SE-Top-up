@@ -26,25 +26,36 @@ function mapCategory($type){
 }
 /* ===== HISTORY ===== */
 $stmt = $conn->prepare("
-  SELECT ur.*, r.name, r.point_cost
+  SELECT ur.*, r.name, r.point_cost, g.name AS game_name
   FROM user_rewards ur
   JOIN rewards r ON ur.reward_id = r.id
+  LEFT JOIN games g ON r.game_id = g.id
   WHERE ur.user_id = ?
   ORDER BY ur.created_at DESC
 ");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $historyResult = $stmt->get_result();
+
+$rewardResult = $conn->query("
+  SELECT r.*, g.image AS game_image
+  FROM rewards r
+  LEFT JOIN games g ON r.game_id = g.id
+  ORDER BY r.point_cost ASC
+");
 function getRewardImage($r){
-  // balance → ใช้รูป fix
+  // balance → ใช้รูปเดียว
   if($r['type'] === 'balance'){
     return '../admin/uploads/point+.png';
   }
 
-  // อื่นๆ → เอาจาก DB แล้วเติม path หน้า
-  return !empty($r['image'])
-    ? '../admin/' . $r['image']
-    : '../admin/uploads/default.png';
+  // ถ้ามี game → ใช้รูปเกม
+  if(!empty($r['game_image'])){
+    return '../admin/' . $r['game_image'];
+  }
+
+  // fallback
+  return '../admin/uploads/default.png';
 }
 ?>
 <?php include "partials/header.php"; ?>
@@ -139,7 +150,16 @@ function getRewardImage($r){
               <?php if($historyResult->num_rows > 0): ?>
                 
                 <?php while($h = $historyResult->fetch_assoc()): ?>
-                  <tr>
+                  <tr 
+                    class="history-row"
+                    data-name="<?= htmlspecialchars($h['name']) ?>"
+                    data-game="<?= htmlspecialchars($h['game_name'] ?? '-') ?>"
+                    data-point="<?= number_format($h['point_cost']) ?>"
+                    data-date="<?= date("d/m/Y H:i", strtotime($h['created_at'])) ?>"
+                    data-status="<?= $h['status'] ?>"
+                    data-detail="<?= htmlspecialchars($h['detail'] ?? '-') ?>"
+                    style="cursor:pointer;"
+                  >
                     <!-- วันที่ -->
                     <td><?= date("d/m/Y", strtotime($h['created_at'])) ?></td>
 
@@ -174,3 +194,18 @@ function getRewardImage($r){
 </section>
 
 <?php include "partials/footer.php"; ?>
+<script>
+document.querySelectorAll(".history-row").forEach(row => {
+  row.onclick = () => {
+
+    document.getElementById("m_name").innerText = row.dataset.name;
+    document.getElementById("m_point").innerText = row.dataset.point;
+    document.getElementById("m_date").innerText = row.dataset.date;
+    document.getElementById("m_status").innerText = row.dataset.status;
+    document.getElementById("m_detail").innerText = row.dataset.detail;
+    document.getElementById("m_game").innerText = row.dataset.game;
+                
+    new bootstrap.Modal(document.getElementById('historyModal')).show();
+  };
+});
+</script>

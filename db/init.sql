@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 29, 2026 at 11:03 AM
+-- Generation Time: Mar 29, 2026 at 12:35 PM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -317,7 +317,8 @@ INSERT INTO `packages` (`id`, `game_id`, `name`, `price`, `status`, `created_at`
 (33, 108, '60 Bonds', 30.00, 'ON', '2026-03-29 07:29:26'),
 (34, 108, '300 Bonds', 150.00, 'ON', '2026-03-29 07:29:26'),
 (35, 109, '100 FC Points', 35.00, 'ON', '2026-03-29 07:29:26'),
-(36, 109, '500 FC Points', 150.00, 'ON', '2026-03-29 07:29:26');
+(36, 109, '500 FC Points', 150.00, 'ON', '2026-03-29 07:29:26'),
+(37, 7, 'Punn 1hr', 1500.00, 'ON', '2026-03-29 12:21:15');
 
 -- --------------------------------------------------------
 
@@ -332,29 +333,30 @@ CREATE TABLE `rewards` (
   `value` int NOT NULL,
   `point_cost` int NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `image` varchar(255) DEFAULT NULL
+  `image` varchar(255) DEFAULT NULL,
+  `game_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rewards`
 --
 
-INSERT INTO `rewards` (`id`, `name`, `type`, `value`, `point_cost`, `created_at`, `image`) VALUES
-(1, 'เงิน 10 บาท', 'balance', 10, 100, '2026-03-27 14:25:29', NULL),
-(2, 'เงิน 20 บาท', 'balance', 20, 180, '2026-03-27 14:25:29', NULL),
-(3, 'เงิน 50 บาท', 'balance', 50, 450, '2026-03-27 14:25:29', NULL),
-(4, 'Bonus Diamonds +20', 'code', 20, 200, '2026-03-27 14:25:29', 'uploads/pubg.jpg'),
-(5, 'Bonus Diamonds +50', 'code', 50, 450, '2026-03-27 14:25:29', NULL),
-(6, 'Gift Card 100฿', 'giftcard', 100, 900, '2026-03-27 14:25:29', NULL),
-(7, 'Gift Card 300฿', 'giftcard', 300, 2500, '2026-03-27 14:25:29', NULL),
-(8, 'เงิน 5 บาท', 'balance', 5, 50, '2026-03-29 07:29:31', NULL),
-(9, 'เงิน 100 บาท', 'balance', 100, 900, '2026-03-29 07:29:31', NULL),
-(10, 'Bonus RP +100', 'code', 100, 300, '2026-03-29 07:29:31', NULL),
-(11, 'Bonus VP +200', 'code', 200, 500, '2026-03-29 07:29:31', NULL),
-(12, 'Steam Wallet 50฿', 'giftcard', 50, 450, '2026-03-29 07:29:31', NULL),
-(13, 'Steam Wallet 100฿', 'giftcard', 100, 900, '2026-03-29 07:29:31', NULL),
-(14, 'Netflix 1 เดือน', 'giftcard', 199, 1500, '2026-03-29 07:29:31', NULL),
-(15, 'Spotify 1 เดือน', 'giftcard', 129, 1200, '2026-03-29 07:29:31', NULL);
+INSERT INTO `rewards` (`id`, `name`, `type`, `value`, `point_cost`, `created_at`, `image`, `game_id`) VALUES
+(1, 'เงิน 10 บาท', 'balance', 10, 100, '2026-03-27 14:25:29', NULL, NULL),
+(2, 'เงิน 20 บาท', 'balance', 20, 180, '2026-03-27 14:25:29', NULL, NULL),
+(3, 'เงิน 50 บาท', 'balance', 50, 450, '2026-03-27 14:25:29', NULL, NULL),
+(4, 'Bonus Diamonds +20', 'code', 20, 200, '2026-03-27 14:25:29', NULL, 1),
+(5, 'Bonus Diamonds +50', 'code', 50, 450, '2026-03-27 14:25:29', NULL, 4),
+(6, 'Gift Card 100฿', 'giftcard', 100, 900, '2026-03-27 14:25:29', NULL, NULL),
+(7, 'Gift Card 300฿', 'giftcard', 300, 2500, '2026-03-27 14:25:29', NULL, NULL),
+(8, 'เงิน 5 บาท', 'balance', 5, 50, '2026-03-29 07:29:31', NULL, NULL),
+(9, 'เงิน 100 บาท', 'balance', 100, 900, '2026-03-29 07:29:31', NULL, NULL),
+(10, 'Bonus RP +100', 'code', 100, 300, '2026-03-29 07:29:31', NULL, NULL),
+(11, 'Bonus VP +200', 'code', 200, 500, '2026-03-29 07:29:31', NULL, NULL),
+(12, 'Steam Wallet 50฿', 'giftcard', 50, 450, '2026-03-29 07:29:31', NULL, NULL),
+(13, 'Steam Wallet 100฿', 'giftcard', 100, 900, '2026-03-29 07:29:31', NULL, NULL),
+(14, 'Netflix 1 เดือน', 'giftcard', 199, 1500, '2026-03-29 07:29:31', NULL, NULL),
+(15, 'Spotify 1 เดือน', 'giftcard', 129, 1200, '2026-03-29 07:29:31', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -544,7 +546,8 @@ ALTER TABLE `packages`
 -- Indexes for table `rewards`
 --
 ALTER TABLE `rewards`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_reward_game` (`game_id`);
 
 --
 -- Indexes for table `transactions`
@@ -619,7 +622,7 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `rewards`
@@ -681,6 +684,12 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `packages`
   ADD CONSTRAINT `packages_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`);
+
+--
+-- Constraints for table `rewards`
+--
+ALTER TABLE `rewards`
+  ADD CONSTRAINT `fk_reward_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`);
 
 --
 -- Constraints for table `transactions`

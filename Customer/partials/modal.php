@@ -120,7 +120,6 @@
 </div>
 
 
-// Custom UID Selection Modal
 <div id="uidModal" class="uid-modal">
   <div class="uid-modal-content">
     <h5>เลือก UID</h5>
@@ -130,5 +129,29 @@
     <button onclick="closeUidModal()" class="se-btn-gray w-100 mt-3">
       ปิด
     </button>
+  </div>
+</div>
+
+<div class="modal fade" id="historyModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">รายละเอียด</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p><strong>เกม:</strong> <span id="m_game"></span></p>
+        <p><strong>รางวัล:</strong> <span id="m_name"></span></p>
+        <p><strong>แต้ม:</strong> <span id="m_point"></span></p>
+        <p><strong>เวลา:</strong> <span id="m_date"></span></p>
+        <p><strong>สถานะ:</strong> <span id="m_status"></span></p>
+        <hr>
+
+        <div id="m_detail" style="font-weight:700;"></div>
+      </div>
+
+    </div>
   </div>
 </div>

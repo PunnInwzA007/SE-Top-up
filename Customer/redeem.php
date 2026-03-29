@@ -1,14 +1,20 @@
-<?php
-session_start();
-require_once "../config/db.php";
+<?php require_once "auth.php"; ?>
+<?php require_once "../config/db.php"; ?>
 
+<?php
 $user_id = $_SESSION['user_id'];
 $reward_id = $_GET['id'] ?? 0;
 
 /* ======================
    GET REWARD + USER
 ====================== */
-$reward = $conn->query("SELECT * FROM rewards WHERE id = $reward_id")->fetch_assoc();
+$reward = $conn->query("
+  SELECT r.*, g.image AS game_image
+  FROM rewards r
+  LEFT JOIN games g ON r.game_id = g.id
+  WHERE r.id = $reward_id
+")->fetch_assoc();
+
 $user = $conn->query("SELECT points FROM users WHERE id = $user_id")->fetch_assoc();
 
 if(!$reward){
@@ -16,95 +22,154 @@ if(!$reward){
 }
 
 if($user['points'] < $reward['point_cost']){
-  die("Point ไม่พอ");
+  $error = "Point ไม่พอ";
 }
 
 /* ======================
-   START TRANSACTION (สำคัญ)
+   HANDLE REDEEM
 ====================== */
-$conn->begin_transaction();
+if(isset($_POST['confirm']) && empty($error)){
 
-try {
+  $conn->begin_transaction();
 
-  $detail = null;
+  try {
+    $detail = null;
 
-  /* ======================
-     TYPE: balance
-  ====================== */
-  if($reward['type'] == 'balance'){
+    if($reward['type'] == 'balance'){
+      $conn->query("UPDATE users SET balance = balance + {$reward['value']} WHERE id = $user_id");
+      $detail = "+{$reward['value']} balance";
+    }
 
+    if($reward['type'] == 'code'){
+      $code = "SE" . rand(1000,9999);
+      $conn->query("INSERT INTO discount_codes (code, discount_amount, usage_limit) VALUES ('$code', {$reward['value']}, 1)");
+      $detail = $code;
+    }
+
+    if($reward['type'] == 'giftcard'){
+      $gift = $conn->query("
+        SELECT * FROM giftcard_stock 
+        WHERE reward_id = {$reward['id']} AND status='available'
+        LIMIT 1
+      ")->fetch_assoc();
+
+      if(!$gift){
+        throw new Exception("Giftcard หมด");
+      }
+
+      $conn->query("
+        UPDATE giftcard_stock 
+        SET status='used', used_by=$user_id, used_at=NOW()
+        WHERE id = {$gift['id']}
+      ");
+
+      $detail = $gift['code'];
+    }
+
+    // หัก point
     $conn->query("
       UPDATE users 
-      SET balance = balance + {$reward['value']}
+      SET points = points - {$reward['point_cost']}
       WHERE id = $user_id
     ");
 
-    $detail = "+{$reward['value']} balance";
-  }
-
-  /* ======================
-     TYPE: code
-  ====================== */
-  if($reward['type'] == 'code'){
-
-    $code = "SE" . rand(1000,9999);
-
+    // history
     $conn->query("
-      INSERT INTO discount_codes (code, discount_amount, usage_limit)
-      VALUES ('$code', {$reward['value']}, 1)
+      INSERT INTO user_rewards (user_id, reward_id, detail, status)
+      VALUES ($user_id, {$reward['id']}, '$detail', 'success')
     ");
 
-    $detail = $code; // ⭐ เก็บ code ลง history
+    $conn->commit();
+
+    $success = "แลกสำเร็จ! ได้: $detail";
+
+  } catch (Exception $e) {
+    $conn->rollback();
+    $error = $e->getMessage();
   }
-
-  /* ======================
-     TYPE: giftcard
-  ====================== */
-  if($reward['type'] == 'giftcard'){
-
-    // ดึง code ที่ยัง available
-    $gift = $conn->query("
-      SELECT * FROM giftcard_stock 
-      WHERE reward_id = {$reward['id']} AND status = 'available'
-      LIMIT 1
-    ")->fetch_assoc();
-
-    if(!$gift){
-      throw new Exception("Giftcard หมด");
-    }
-
-    // mark used
-    $conn->query("
-      UPDATE giftcard_stock 
-      SET status='used', used_by=$user_id, used_at=NOW()
-      WHERE id = {$gift['id']}
-    ");
-
-    $detail = $gift['code']; // ⭐ เก็บ code ลง history
-  }
-
-  /* ======================
-     DEDUCT POINT
-  ====================== */
-  $conn->query("
-    UPDATE users 
-    SET points = points - {$reward['point_cost']}
-    WHERE id = $user_id
-  ");
-
-  /* ======================
-     INSERT HISTORY ⭐ สำคัญ
-  ====================== */
-  $conn->query("
-    INSERT INTO user_rewards (user_id, reward_id, detail, status)
-    VALUES ($user_id, {$reward['id']}, '$detail', 'success')
-  ");
-
-  $conn->commit();
-
-  echo "🎉 แลกสำเร็จ! ได้: <b>$detail</b>";
-
-} catch (Exception $e) {
-  $conn->rollback();
-  echo "❌ Error: " . $e->getMessage();
 }
+
+/* ======================
+   IMAGE
+====================== */
+function getRewardImage($r){
+  if($r['type'] === 'balance'){
+    return '../admin/uploads/point+.png';
+  }
+  return !empty($r['game_image'])
+    ? '../admin/' . $r['game_image']
+    : '../admin/uploads/default.png';
+}
+?>
+
+<?php include "partials/header.php"; ?>
+
+<section class="se-section">
+  <div class="se-container">
+
+    <!-- 🔙 BACK -->
+    <a href="points.php" class="se-btn-red mb-3">← กลับ</a>
+
+    <div class="row g-4">
+
+      <!-- LEFT -->
+      <div class="col-lg-7">
+        <div class="se-card p-4">
+
+          <h5 class="mb-4" style="font-weight:900;">รายละเอียด Reward</h5>
+
+          <img src="<?= getRewardImage($reward) ?>" class="se-ph se-ph-wide mb-3">
+
+          <div class="mb-2"><strong>ชื่อ:</strong> <?= htmlspecialchars($reward['name']) ?></div>
+          <div class="mb-2"><strong>ประเภท:</strong> <?= $reward['type'] ?></div>
+          <div class="mb-2"><strong>มูลค่า:</strong> <?= $reward['value'] ?></div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="col-lg-5">
+        <div class="se-card p-4">
+
+          <h5 class="mb-4" style="font-weight:900;">สรุปการแลก</h5>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span>แต้มที่ใช้</span>
+            <span><?= number_format($reward['point_cost']) ?></span>
+          </div>
+
+          <hr>
+
+          <div class="mb-3">
+            <span>แต้มของคุณ:</span>
+            <strong><?= number_format($user['points']) ?></strong>
+          </div>
+
+          <?php if(isset($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+          <?php endif; ?>
+
+          <?php if(isset($success)): ?>
+            <div class="alert alert-success"><?= $success ?></div>
+          <?php endif; ?>
+
+          <form method="POST">
+            <button 
+              type="submit" 
+              name="confirm"
+              class="se-btn-green w-100"
+              <?= isset($error) ? 'disabled' : '' ?>
+            >
+              ยืนยันการแลก
+            </button>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<?php include "partials/footer.php"; ?>
