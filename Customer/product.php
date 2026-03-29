@@ -100,21 +100,21 @@ $packages = $conn->query($sql);
 
                 <div class="col-6 col-lg-4">
                     <div class="se-payment-card" data-payment="promptpay">
-                    <div class="se-payment-logo"><div class="se-ph se-ph-wide mb-3"></div></div>
+                    <div class="se-payment-logo"><img src="../admin/uploads/promptpay.jpg" alt="PromptPay"></div>
                     <div class="se-payment-name">PromptPay</div>
                     </div>
                 </div>
 
                 <div class="col-6 col-lg-4">
                     <div class="se-payment-card" data-payment="truemoney">
-                    <div class="se-payment-logo"><div class="se-ph se-ph-wide mb-3"></div></div>
+                    <div class="se-payment-logo"><img src="../admin/uploads/truemoney.jpg" alt="TrueMoney"></div>
                     <div class="se-payment-name">TrueMoney</div>
                     </div>
                 </div>
 
                 <div class="col-6 col-lg-4">
                     <div class="se-payment-card" data-payment="wallet">
-                    <div class="se-payment-logo"><div class="se-ph se-ph-wide mb-3"></div></div>
+                    <div class="se-payment-logo"><img src="../admin/uploads/wallet.jpg" alt="Wallet"></div>
                     <div class="se-payment-name">Wallet</div>
                     </div>
                 </div>
