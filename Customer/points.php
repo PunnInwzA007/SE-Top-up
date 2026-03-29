@@ -35,6 +35,17 @@ $stmt = $conn->prepare("
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $historyResult = $stmt->get_result();
+function getRewardImage($r){
+  // balance → ใช้รูป fix
+  if($r['type'] === 'balance'){
+    return '../admin/uploads/point+.png';
+  }
+
+  // อื่นๆ → เอาจาก DB แล้วเติม path หน้า
+  return !empty($r['image'])
+    ? '../admin/' . $r['image']
+    : '../admin/uploads/default.png';
+}
 ?>
 <?php include "partials/header.php"; ?>
 <!-- PAGE HERO -->
@@ -84,7 +95,7 @@ $historyResult = $stmt->get_result();
               <!-- ✅ กดได้ทุกอัน -->
               <a href="redeem.php?id=<?= $r['id'] ?>" class="se-card-topup">
 
-                <img src="../admin/uploads/<?= htmlspecialchars($r['image']) ?>">
+                <img src="<?= getRewardImage($r) ?>">
 
                 <div class="se-card-name">
                   <?= htmlspecialchars($r['name']) ?>

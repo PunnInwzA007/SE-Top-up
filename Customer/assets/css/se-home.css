@@ -768,7 +768,7 @@ background:#2f6294;
   max-height: none;
   object-fit: none;
 }
-.se-hr{ background:#000000; border:0px solid var(--se-border); border-radius:14px; position:relative; overflow:hidden; }
+.se-hr{ background:#ffffff; border:0px solid var(--se-border); border-radius:14px; position:relative; overflow:hidden; }
 .se-hr-heroicon{ 
   width:56px; 
   height:56px; 

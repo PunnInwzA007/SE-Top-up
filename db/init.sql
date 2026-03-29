@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 29, 2026 at 09:54 AM
+-- Generation Time: Mar 29, 2026 at 11:03 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -109,7 +109,11 @@ INSERT INTO `discount_codes` (`id`, `code`, `discount_amount`, `min_price`, `usa
 (19, 'SE6438', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 06:28:15'),
 (20, 'SE6844', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 08:01:55'),
 (21, 'SE1467', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 08:02:00'),
-(22, 'SE4539', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 09:53:38');
+(22, 'SE4539', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 09:53:38'),
+(23, 'SE1179', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:01:48'),
+(24, 'SE8876', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:01:53'),
+(25, 'SE3531', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:02:09'),
+(26, 'SE3248', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:05:28');
 
 -- --------------------------------------------------------
 
@@ -176,7 +180,10 @@ INSERT INTO `game_uids` (`id`, `user_id`, `game_id`, `uid`, `created_at`) VALUES
 (11, 3, 4, 'PunnNAJA#fyck', '2026-03-27 11:17:13'),
 (12, 5, 109, 'PunnInwza007', '2026-03-29 08:00:56'),
 (13, 5, 100, 'PunnNAJA#fyck', '2026-03-29 08:05:30'),
-(14, 5, 100, 'PunnNAJA#fyck', '2026-03-29 08:06:13');
+(14, 5, 100, 'PunnNAJA#fyck', '2026-03-29 08:06:13'),
+(15, 5, 103, 'SudlorPunnPunn#007', '2026-03-29 10:12:56'),
+(16, 5, 101, 'D0esnotex1st#fyck', '2026-03-29 10:15:00'),
+(17, 5, 101, 'd0esnotex1st#fyck', '2026-03-29 10:15:05');
 
 -- --------------------------------------------------------
 
@@ -246,7 +253,19 @@ INSERT INTO `orders` (`id`, `user_id`, `package_id`, `game_uid`, `status`, `crea
 (76, 5, 36, 'PunnInwza007', 'success', '2026-03-29 08:01:10', 150.00),
 (77, 5, 36, 'PunnInwza007', 'success', '2026-03-29 08:02:19', 130.00),
 (78, 5, 15, 'PunnNAJA#fyck', 'success', '2026-03-29 08:05:42', 600.00),
-(79, 5, 15, 'PunnNAJA#fyck', 'success', '2026-03-29 08:06:18', 600.00);
+(79, 5, 15, 'PunnNAJA#fyck', 'success', '2026-03-29 08:06:18', 600.00),
+(80, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:04', 29.00),
+(81, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:13', 29.00),
+(82, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:28', 29.00),
+(83, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:36', 29.00),
+(84, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:43', 29.00),
+(85, 5, 21, 'SudlorPunnPunn#007', 'success', '2026-03-29 10:13:53', 29.00),
+(86, 5, 17, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:15:11', 400.00),
+(87, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:15:21', 200.00),
+(88, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:15:29', 200.00),
+(89, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:15:54', 200.00),
+(90, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:16:10', 200.00),
+(91, 5, 16, 'PunnNAJA#fyck', 'success', '2026-03-29 10:16:22', 200.00);
 
 -- --------------------------------------------------------
 
@@ -324,7 +343,7 @@ INSERT INTO `rewards` (`id`, `name`, `type`, `value`, `point_cost`, `created_at`
 (1, 'เงิน 10 บาท', 'balance', 10, 100, '2026-03-27 14:25:29', NULL),
 (2, 'เงิน 20 บาท', 'balance', 20, 180, '2026-03-27 14:25:29', NULL),
 (3, 'เงิน 50 บาท', 'balance', 50, 450, '2026-03-27 14:25:29', NULL),
-(4, 'Bonus Diamonds +20', 'code', 20, 200, '2026-03-27 14:25:29', NULL),
+(4, 'Bonus Diamonds +20', 'code', 20, 200, '2026-03-27 14:25:29', 'uploads/pubg.jpg'),
 (5, 'Bonus Diamonds +50', 'code', 50, 450, '2026-03-27 14:25:29', NULL),
 (6, 'Gift Card 100฿', 'giftcard', 100, 900, '2026-03-27 14:25:29', NULL),
 (7, 'Gift Card 300฿', 'giftcard', 300, 2500, '2026-03-27 14:25:29', NULL),
@@ -379,7 +398,19 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `order_id`, `crea
 (68, 5, 'purchase', -150.00, 76, '2026-03-29 08:01:10'),
 (69, 5, 'purchase', -130.00, 77, '2026-03-29 08:02:19'),
 (70, 5, 'purchase', -600.00, 78, '2026-03-29 08:05:42'),
-(71, 5, 'purchase', -600.00, 79, '2026-03-29 08:06:18');
+(71, 5, 'purchase', -600.00, 79, '2026-03-29 08:06:18'),
+(72, 5, 'purchase', -29.00, 80, '2026-03-29 10:13:04'),
+(73, 5, 'purchase', -29.00, 81, '2026-03-29 10:13:13'),
+(74, 5, 'purchase', -29.00, 82, '2026-03-29 10:13:28'),
+(75, 5, 'purchase', -29.00, 83, '2026-03-29 10:13:36'),
+(76, 5, 'purchase', -29.00, 84, '2026-03-29 10:13:43'),
+(77, 5, 'purchase', -29.00, 85, '2026-03-29 10:13:53'),
+(78, 5, 'purchase', -400.00, 86, '2026-03-29 10:15:11'),
+(79, 5, 'purchase', -200.00, 87, '2026-03-29 10:15:21'),
+(80, 5, 'purchase', -200.00, 88, '2026-03-29 10:15:29'),
+(81, 5, 'purchase', -200.00, 89, '2026-03-29 10:15:54'),
+(82, 5, 'purchase', -200.00, 90, '2026-03-29 10:16:10'),
+(83, 5, 'purchase', -200.00, 91, '2026-03-29 10:16:22');
 
 -- --------------------------------------------------------
 
@@ -409,7 +440,7 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (2, 'player2', 'Mike', 'Johnson', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12', 0),
 (3, 'gamerx', 'Alex', 'Wong', '1234', 'gamerx@email.com', '0833333333', 1200.00, '2026-03-13 04:02:12', 800),
 (4, 'traveler', 'Lumine', 'Traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00', 0),
-(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 3220.00, '2026-03-14 04:46:43', 778),
+(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 1666.00, '2026-03-14 04:46:43', 230),
 (6, 'iamveryhandsome', 'sudlor', 'punnpunn', '123456', 'PanyawatFaktim1209@gmail.com', '0984606569', 0.00, '2026-03-14 04:55:25', 0),
 (7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0);
 
@@ -437,7 +468,14 @@ INSERT INTO `user_rewards` (`id`, `user_id`, `reward_id`, `detail`, `created_at`
 (2, 1, 4, 'BONUS20-AAA111', '2026-03-27 14:25:46', 'success'),
 (3, 1, 6, 'GIFT100-A1B2C3', '2026-03-27 14:25:46', 'success'),
 (4, 2, 2, '+20 balance', '2026-03-27 14:25:46', 'success'),
-(5, 2, 7, 'GIFT300-X1Y2Z3', '2026-03-27 14:25:46', 'success');
+(5, 2, 7, 'GIFT300-X1Y2Z3', '2026-03-27 14:25:46', 'success'),
+(6, 5, 1, '+10 balance', '2026-03-29 10:01:17', 'success'),
+(7, 5, 4, 'BONUS20-XYZ123', '2026-03-29 10:01:17', 'success'),
+(8, 5, 6, 'GIFT100-Z9X8C7', '2026-03-29 10:01:17', 'success'),
+(9, 5, 8, '+5 balance', '2026-03-29 10:04:40', 'success'),
+(10, 5, 8, '+5 balance', '2026-03-29 10:05:16', 'success'),
+(11, 5, 4, 'SE3248', '2026-03-29 10:05:28', 'success'),
+(12, 5, 1, '+10 balance', '2026-03-29 10:34:32', 'success');
 
 --
 -- Indexes for dumped tables
@@ -551,7 +589,7 @@ ALTER TABLE `bonus_codes`
 -- AUTO_INCREMENT for table `discount_codes`
 --
 ALTER TABLE `discount_codes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `games`
@@ -563,7 +601,7 @@ ALTER TABLE `games`
 -- AUTO_INCREMENT for table `game_uids`
 --
 ALTER TABLE `game_uids`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `giftcard_stock`
@@ -575,7 +613,7 @@ ALTER TABLE `giftcard_stock`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `packages`
@@ -593,7 +631,7 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -605,7 +643,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_rewards`
 --
 ALTER TABLE `user_rewards`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
