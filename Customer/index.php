@@ -1,4 +1,54 @@
 <?php include "partials/header.php"; ?>
+<?php require_once "../config/db.php";?>
+<?php
+// ==========================
+// 🔥 TRENDING GAMES
+// ==========================
+$trendingGames = $conn->query("
+  SELECT g.*, COUNT(o.id) as total_orders
+  FROM games g
+  LEFT JOIN packages p ON g.id = p.game_id
+  LEFT JOIN orders o ON p.id = o.package_id AND o.status = 'success'
+  WHERE g.status = 'ON'
+  GROUP BY g.id
+  ORDER BY total_orders DESC
+  LIMIT 3
+");
+
+// ==========================
+// 💎 TRENDING PACKAGE
+// ==========================
+$trendingPackages = $conn->query("
+  SELECT p.*, g.name as game_name, g.image,
+         COUNT(o.id) as total_orders
+  FROM packages p
+  JOIN games g ON p.game_id = g.id
+  LEFT JOIN orders o ON p.id = o.package_id AND o.status = 'success'
+  WHERE p.status = 'ON'
+  GROUP BY p.id
+  ORDER BY total_orders DESC
+  LIMIT 3
+");
+
+// ==========================
+// 🧩 CATEGORIES
+// ==========================
+$categories = $conn->query("
+  SELECT category, COUNT(*) as total
+  FROM games
+  WHERE status = 'ON'
+  GROUP BY category
+");
+
+function mapCategoryName($cat){
+  return [
+    'mobile' => 'Mobile Games',
+    'pc' => 'PC Games',
+    'gift' => 'Gift Cards',
+    'sub' => 'Subscriptions'
+  ][$cat] ?? $cat;
+}
+?>
 
 <!-- HERO -->
 <section class="se-hero">
@@ -76,7 +126,9 @@
   </div>
 </section>
 
-<!-- TRENDING GAMES -->
+<!-- ========================== -->
+<!-- 🔥 TRENDING GAMES -->
+<!-- ========================== -->
 <section class="se-section">
   <div class="se-container">
     <div class="se-section-head">
@@ -88,21 +140,23 @@
     </div>
 
     <div class="row g-3 mt-2">
-      <?php for($i=1;$i<=3;$i++): ?>
+      <?php while($g = $trendingGames->fetch_assoc()): ?>
       <div class="col-md-4">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="product.php?game_id=<?= $g['id'] ?>">
           <div class="se-card">
-            <div class="se-ph se-ph-wide"></div>
-            <div class="se-card-name">Game Name</div>
+            <img src="../admin/<?= $g['image'] ?>" class="se-ph se-ph-wide">
+            <div class="se-card-name"><?= $g['name'] ?></div>
           </div>
         </a>
       </div>
-      <?php endfor; ?>
+      <?php endwhile; ?>
     </div>
   </div>
 </section>
 
-<!-- TRENDING PACKAGE -->
+<!-- ========================== -->
+<!-- 💎 TRENDING PACKAGE -->
+<!-- ========================== -->
 <section class="se-panel">
   <div class="se-container">
     <div class="se-section-head">
@@ -114,16 +168,18 @@
     </div>
 
     <div class="row g-3 mt-2">
-      <?php for($i=1;$i<=3;$i++): ?>
+      <?php while($p = $trendingPackages->fetch_assoc()): ?>
       <div class="col-md-4">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="product.php?game_id=<?= $p['game_id'] ?>">
           <div class="se-card">
-            <div class="se-ph se-ph-wide"></div>
-            <div class="se-card-name">Package Name</div>
+            <img src="../admin/<?= $p['image'] ?>" class="se-ph se-ph-wide">
+            <div class="se-card-name">
+              <?= $p['game_name'] ?> - <?= $p['name'] ?>
+            </div>
           </div>
         </a>
       </div>
-      <?php endfor; ?>
+      <?php endwhile; ?>
     </div>
   </div>
 </section>
@@ -136,7 +192,7 @@
 
     <div class="row g-3 mt-3">
       <div class="col-6 col-lg-3">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="topup.php?category=mobile">
           <div class="se-cat">
             <div class="se-cat-title">Mobile Games</div>
             <div class="se-ph se-ph-square"></div>
@@ -145,7 +201,7 @@
       </div>
 
       <div class="col-6 col-lg-3">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="topup.php?category=pc">
           <div class="se-cat">
             <div class="se-cat-title">PC Games</div>
             <div class="se-ph se-ph-square"></div>
@@ -154,7 +210,7 @@
       </div>
 
       <div class="col-6 col-lg-3">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="topup.php?category=sub">
           <div class="se-cat">
             <div class="se-cat-title">Subscriptions</div>
             <div class="se-ph se-ph-square"></div>
@@ -163,7 +219,7 @@
       </div>
 
       <div class="col-6 col-lg-3">
-        <a class="se-card-link" href="topup.php">
+        <a class="se-card-link" href="topup.php?category=gift">
           <div class="se-cat">
             <div class="se-cat-title">Gift Cards</div>
             <div class="se-ph se-ph-square"></div>
@@ -182,7 +238,7 @@
            เติมเกมง่าย ปลอดภัย ตลอดวันตลอดคืน 24 ชั่วโมง<br>
            ทำการเติมจะได้รับ Reward เพื่อใช้แลกของลดราคา
         </div>
-        <a class="se-cta-btn" href="topup.html">TOP-UP NOW</a>
+        <a class="se-cta-btn" href="topup.php">TOP-UP NOW</a>
         </div>
         <div class="se-cta-card se-cta-right">
           <div class="se-cta-tag">REWARD POINTS</div>
@@ -191,7 +247,7 @@
             สะสมแต้มจากทุกคำสั่งซื้อ<br>
             นำไปแลกส่วนลด แก้เกมถูกลง และรับโบนัสพิเศษได้เลย
           </div>
-          <a class="se-cta-btn" href="points.html">REDEEM NOW</a>
+          <a class="se-cta-btn" href="points.php">REDEEM NOW</a>
         </div>
       </div>
   </div>

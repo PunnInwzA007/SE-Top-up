@@ -41,11 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
               ดังนั้นเราจะใช้ .replace() เพื่อลบ "uploads/" ออกก่อน 
               แล้วค่อยใส่ "admin/uploads/" เข้าไปข้างหน้าให้ถูกต้อง
             */
-            const cleanImageName = item.image.replace('uploads/', ''); 
-            const imagePath = `uploads/${cleanImageName}`;
+            const imagePath = `../admin/${item.image}`;
 
             div.innerHTML = `
-                <img src="${imagePath}" alt="${item.name}" onerror="this.src='admin/uploads/default.png'">
+                <img src="${imagePath}" alt="${item.name}" onerror="this.src='../admin/uploads/default.png'">
                 <div class="search-item-info">
                     <div class="search-item-name">${item.name}</div>
                     <div class="search-item-tag">Game</div>

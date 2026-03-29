@@ -64,3 +64,22 @@ buttons.forEach(btn=>{
 });
 
 update();
+// ==========================
+// 🔥 AUTO FILTER FROM URL
+// ==========================
+const params = new URLSearchParams(window.location.search);
+const categoryFromURL = params.get("category");
+
+if(categoryFromURL){
+  currentCategory = categoryFromURL;
+
+  buttons.forEach(btn=>{
+    btn.classList.remove("active");
+
+    if(btn.dataset.category === categoryFromURL){
+      btn.classList.add("active");
+    }
+  });
+
+  update();
+}
