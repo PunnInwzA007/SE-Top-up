@@ -80,3 +80,12 @@ $('#editRewardModal').on('show.bs.modal', function (event) {
   $('#editRewardModal input[name="point_cost"]').val(button.data('point_cost'));
   $('#editAmount').val(button.data('amount'));
 });
+
+$('#editUserModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+
+  $('#editUserId').val(button.data('id'));
+  $('#editUsername').val(button.data('username'));
+  $('#editEmail').val(button.data('email'));
+  $('#editStatus').val(button.data('status'));
+});

@@ -78,20 +78,23 @@ else{
         $error = "Username นี้ถูกใช้แล้ว";
     }else{
 
+        $status = 'active';
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         // 🔥 INSERT
         $stmt = $conn->prepare("
-        INSERT INTO users (username, firstname, lastname, password, email, phone)
-        VALUES (?,?,?,?,?,?)
+        INSERT INTO users (username, firstname, lastname, password, email, phone, status)
+        VALUES (?,?,?,?,?,?,?)
         ");
 
         $stmt->bind_param(
-        "ssssss",
+        "sssssss",
         $username,
         $firstname,
         $lastname,
-        $password,
+        $hashed_password,
         $email,
-        $phone
+        $phone,
+        $status
         );
 
         if($stmt->execute()){
