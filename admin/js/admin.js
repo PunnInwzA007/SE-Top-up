@@ -71,13 +71,12 @@ $(function () {
 });
 
 $('#editRewardModal').on('show.bs.modal', function (event) {
-  const btn = $(event.relatedTarget);
+  var button = $(event.relatedTarget);
 
-  $('#editRewardId').val(btn.data('id'));
-  $('#editRewardName').val(btn.data('name'));
-  $('#editRewardType').val(btn.data('type'));
-  $('#editRewardValue').val(btn.data('value'));
-  $('#editRewardPackage').val(btn.data('package'));
-
-  $('#deleteRewardBtn').attr('href', 'delete_reward.php?id=' + btn.data('id'));
+  $('#editRewardId').val(button.data('id'));
+  $('#editRewardName').val(button.data('name'));
+  $('#editRewardType').val(button.data('type'));
+  $('#editRewardPackage').val(button.data('package_id'));
+  $('#editRewardModal input[name="point_cost"]').val(button.data('point_cost'));
+  $('#editAmount').val(button.data('amount'));
 });

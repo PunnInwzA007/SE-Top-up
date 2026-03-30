@@ -13,7 +13,7 @@ $reward = $conn->query("
   FROM rewards r
   LEFT JOIN packages p ON r.package_id = p.id
   LEFT JOIN games g ON p.game_id = g.id
-  WHERE r.id = $reward_id
+  WHERE r.id = $reward_id AND r.status='ON'
 ")->fetch_assoc();
 
 $user = $conn->query("

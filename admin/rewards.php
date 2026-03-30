@@ -9,7 +9,7 @@ $sql = "
 SELECT rewards.*, packages.name AS package_name
 FROM rewards
 LEFT JOIN packages ON rewards.package_id = packages.id
-WHERE 1=1
+WHERE rewards.status = 'ON'
 ";
 
 if (!empty($search)) {
@@ -83,10 +83,9 @@ Rewards
         data-id="<?= $row['id'] ?>"
         data-name="<?= htmlspecialchars($row['name']) ?>"
         data-type="<?= $row['type'] ?>"
-        data-package="<?= $row['package_name'] ?? 'No Package' ?>
-        data-id="<?= $row['id'] ?>"
-        data-name="<?= htmlspecialchars($row['name']) ?>"
-        data-type="<?= $row['type'] ?>">
+        data-package_id="<?= $row['package_id'] ?>"
+        data-point_cost="<?= $row['point_cost'] ?>"
+        data-amount="<?= $row['amount'] ?>">
 Edit
 </button>
 
