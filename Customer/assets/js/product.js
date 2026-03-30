@@ -27,13 +27,8 @@ function updateTotal(){
   if(totalPriceEl) totalPriceEl.innerText = formatMoney(total);
   if(discountEl) discountEl.innerText = formatMoney(discount);
 
-  const uid = document.getElementById("uidInput")?.value;
-
-  if(selectedPrice > 0 && selectedPayment && uid){
-    continueBtn?.removeAttribute("disabled");
-  }else{
-    continueBtn?.setAttribute("disabled",true);
-  }
+  // ✅ เปิดปุ่มตลอด
+  continueBtn?.removeAttribute("disabled");
 }
 
 // ===== PAYMENT =====
@@ -108,17 +103,17 @@ continueBtn?.addEventListener("click",()=>{
   const uid = document.getElementById("uidInput")?.value;
 
   if(!uid){
-    alert("กรอก UID ก่อน");
+    alert("⚠️ กรุณากรอก UID");
     return;
   }
 
   if(!selectedPackageId){
-    alert("เลือกแพ็กเกจก่อน");
+    alert("⚠️ กรุณาเลือกแพ็กเกจ");
     return;
   }
 
   if(!selectedPayment){
-    alert("เลือกช่องทางชำระเงินก่อน");
+    alert("⚠️ กรุณาเลือกช่องทางชำระเงิน");
     return;
   }
 

@@ -100,8 +100,8 @@ if(isset($_POST['go_checkout'])){
       <div class="col-lg-6">
         <div class="se-card p-4">
 
-          <h4 style="font-weight:900;">🎁 Redeem Code</h4>
-
+          <h4 style="font-weight:900;">Redeem Code</h4>
+          <hr>
           <!-- ================= STEP 1 ================= -->
           <?php if(!$codeData): ?>
 

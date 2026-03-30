@@ -59,7 +59,7 @@ $balance = $user['balance'];
 ====================== */
 if(isset($_POST['confirm'])){
     if($balance < $total_price){
-        $error = "เงินไม่พอ";
+        $error = "⚠️ เงินของคุณไม่เพียงพอ";
     } else {
         $conn->begin_transaction();
         try {
@@ -89,6 +89,20 @@ if(isset($_POST['confirm'])){
             $stmt_points->bind_param("ii", $points, $user_id);
             $stmt_points->execute();
 
+            if(isset($_SESSION['checkout']['discount_code'])){
+                $code = $_SESSION['checkout']['discount_code'];
+
+                $stmt = $conn->prepare("
+                  UPDATE discount_codes 
+                  SET used_count = used_count + 1 
+                  WHERE code=? 
+                ");
+                $stmt->bind_param("s", $code);
+                $stmt->execute();
+
+                unset($_SESSION['checkout']['discount_code']);
+            }
+
             $conn->commit();
             
             // ล้างส่วนลดเมื่อจ่ายเงินเสร็จ
@@ -117,6 +131,7 @@ if(isset($_SESSION['checkout']['redeem_code'])){
 
     unset($_SESSION['checkout']['redeem_code']);
 }
+
 ?>
 
 <?php include "partials/header.php"; ?>
@@ -156,7 +171,6 @@ if(isset($_SESSION['checkout']['redeem_code'])){
             <span>เงินในบัญชี:</span>
             <strong>฿<?= number_format($balance,2) ?></strong>
           </div>
-
           <?php if(isset($error)): ?>
             <div class="alert alert-danger"><?= $error ?></div>
           <?php endif; ?>
@@ -168,7 +182,6 @@ if(isset($_SESSION['checkout']['redeem_code'])){
               type="submit" 
               name="confirm"
               class="se-btn-green w-100"
-              <?= $balance < $total_price ? 'disabled' : '' ?>
             >
               ยืนยันการชำระเงิน
             </button>
