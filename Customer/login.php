@@ -66,6 +66,9 @@ if(empty($username) || empty($firstname) || empty($lastname) || empty($email) ||
 elseif($password !== $confirm){
     $error = "รหัสผ่านไม่ตรงกัน";
 }
+elseif(!preg_match('/^[0-9]{10}$/', $phone)){
+    $error = "เบอร์โทรต้องเป็นตัวเลข 10 หลัก";
+}
 else{
 
     // 🔍 เช็ค username ซ้ำ
@@ -234,7 +237,9 @@ else{
                 name="phone"
                 class="form-control mb-4"
                 placeholder="Phone"
+                maxlength="10"
                 required
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                 >
                 
                 <button
