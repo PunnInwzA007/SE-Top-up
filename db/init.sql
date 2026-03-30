@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 30, 2026 at 04:03 PM
+-- Generation Time: Mar 30, 2026 at 04:52 PM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -533,7 +533,8 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (9, 'PunnyYY', 'ปัญญวัฒน์', 'ฟักทิม', 'pppp1248', 'panyawatfaktim@gmail.com', '', 0.00, '2026-03-30 02:27:37', 0, 'active'),
 (10, 'iamveryhandsomeS', 'ปัญญวัฒน์', 'ฟักทิม', '1234', 'panyawatfaktim@gmail.com', '0861454050', 0.00, '2026-03-30 05:57:13', 0, 'banned'),
 (11, 'PanyaOn', 'notpanyawat', 'alsonotfaktim', '$2y$10$FKImaCnZJ.9JewvuhbvSpOP2fEBZBfZiTOJXJc7ZeZknQyOJD3l8K', 'notpanyawatfaktim@gmail.com', '0984606569', 88900.00, '2026-03-30 10:24:24', 8050, 'active'),
-(12, 's', 's', 's', '$2y$10$EedkarYf28LN.L4v7hNQ4ulCGIlHPooBDHtVIiPWbC7z6bfnZw8oG', 'panyawatfaktim@gmail.com', '09846', 0.00, '2026-03-30 14:55:15', 0, 'active');
+(12, 's', 's', 's', '$2y$10$EedkarYf28LN.L4v7hNQ4ulCGIlHPooBDHtVIiPWbC7z6bfnZw8oG', 'panyawatfaktim@gmail.com', '09846', 0.00, '2026-03-30 14:55:15', 0, 'active'),
+(13, 'notpunnforsure', 'someone', 'thatnotpunn', '$2y$10$nAbN78GW6HJlVeUbeI25iOZThR16OYfPQDT1k/ao8JIfk7MjDBZDq', 'panyawatfak@gmail.com', '0861454050', 0.00, '2026-03-30 16:38:54', 0, 'active');
 
 -- --------------------------------------------------------
 
@@ -732,7 +733,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `user_rewards`

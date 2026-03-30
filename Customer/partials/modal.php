@@ -155,3 +155,96 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="editPersonalModal">
+  <div class="modal-dialog">
+    <form method="POST" action="update_profile.php" class="modal-content">
+
+      <div class="modal-header">
+        <h5>Edit Personal Info</h5>
+      </div>
+
+      <div class="modal-body">
+
+        <input name="firstname" class="form-control mb-2"
+        value="<?= $user['firstname'] ?>">
+
+        <input name="lastname" class="form-control"
+        value="<?= $user['lastname'] ?>">
+
+        <input type="hidden" name="type" value="personal">
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="se-btn-green w-100">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="editContactModal">
+  <div class="modal-dialog">
+    <form method="POST" action="update_profile.php" class="modal-content">
+
+      <div class="modal-header">
+        <h5>Edit Contact Info</h5>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="email" name="email"
+        class="form-control mb-2"
+        value="<?= htmlspecialchars($user['email']) ?>">
+
+        <input type="text" name="phone"
+        class="form-control"
+        value="<?= htmlspecialchars($user['phone']) ?>"
+        maxlength="10">
+
+        <input type="hidden" name="type" value="contact">
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="se-btn-green w-100">Save</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="changePasswordModal">
+  <div class="modal-dialog">
+    <form method="POST" action="update_profile.php" class="modal-content">
+
+      <div class="modal-header">
+        <h5>Change Password</h5>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="password" name="old_password"
+        class="form-control mb-2"
+        placeholder="Old Password" required>
+
+        <input type="password" name="new_password"
+        class="form-control mb-2"
+        placeholder="New Password" required>
+
+        <input type="password" name="confirm_password"
+        class="form-control"
+        placeholder="Confirm Password" required>
+
+        <input type="hidden" name="type" value="password">
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="se-btn-red w-100">Change Password</button>
+      </div>
+
+    </form>
+  </div>
+</div>
