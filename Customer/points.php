@@ -29,10 +29,12 @@ $stmt = $conn->prepare("
   SELECT ur.*, r.name, r.point_cost, g.name AS game_name
   FROM user_rewards ur
   JOIN rewards r ON ur.reward_id = r.id
-  LEFT JOIN games g ON r.game_id = g.id
+  LEFT JOIN packages p ON r.package_id = p.id
+  LEFT JOIN games g ON p.game_id = g.id
   WHERE ur.user_id = ?
   ORDER BY ur.created_at DESC
 ");
+
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $historyResult = $stmt->get_result();
@@ -40,7 +42,8 @@ $historyResult = $stmt->get_result();
 $rewardResult = $conn->query("
   SELECT r.*, g.image AS game_image
   FROM rewards r
-  LEFT JOIN games g ON r.game_id = g.id
+  LEFT JOIN packages p ON r.package_id = p.id
+  LEFT JOIN games g ON p.game_id = g.id
   ORDER BY r.point_cost ASC
 ");
 function getRewardImage($r){

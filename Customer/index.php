@@ -1,9 +1,7 @@
 <?php include "partials/header.php"; ?>
 <?php require_once "../config/db.php";?>
 <?php
-// ==========================
-// 🔥 TRENDING GAMES
-// ==========================
+
 $trendingGames = $conn->query("
   SELECT g.*, COUNT(o.id) as total_orders
   FROM games g
@@ -15,9 +13,6 @@ $trendingGames = $conn->query("
   LIMIT 3
 ");
 
-// ==========================
-// 💎 TRENDING PACKAGE
-// ==========================
 $trendingPackages = $conn->query("
   SELECT p.*, g.name as game_name, g.image,
          COUNT(o.id) as total_orders
@@ -30,9 +25,6 @@ $trendingPackages = $conn->query("
   LIMIT 3
 ");
 
-// ==========================
-// 🧩 CATEGORIES
-// ==========================
 $categories = $conn->query("
   SELECT category, COUNT(*) as total
   FROM games
@@ -126,9 +118,6 @@ function mapCategoryName($cat){
   </div>
 </section>
 
-<!-- ========================== -->
-<!-- 🔥 TRENDING GAMES -->
-<!-- ========================== -->
 <section class="se-section">
   <div class="se-container">
     <div class="se-section-head">
@@ -154,9 +143,6 @@ function mapCategoryName($cat){
   </div>
 </section>
 
-<!-- ========================== -->
-<!-- 💎 TRENDING PACKAGE -->
-<!-- ========================== -->
 <section class="se-panel">
   <div class="se-container">
     <div class="se-section-head">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 29, 2026 at 01:15 PM
+-- Generation Time: Mar 30, 2026 at 03:07 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -50,21 +50,27 @@ CREATE TABLE `bonus_codes` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
   `code` varchar(100) NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `value` int DEFAULT NULL,
   `status` enum('unused','used') DEFAULT 'unused',
   `used_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `package_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `bonus_codes`
 --
 
-INSERT INTO `bonus_codes` (`id`, `user_id`, `code`, `type`, `value`, `status`, `used_at`, `created_at`) VALUES
-(1, 1, 'BONUS20-AAA111', 'diamond', 20, 'unused', NULL, '2026-03-27 14:25:41'),
-(2, 1, 'BONUS50-BBB222', 'diamond', 50, 'used', NULL, '2026-03-27 14:25:41'),
-(3, 2, 'BONUS20-CCC333', 'diamond', 20, 'unused', NULL, '2026-03-27 14:25:41');
+INSERT INTO `bonus_codes` (`id`, `user_id`, `code`, `status`, `used_at`, `created_at`, `package_id`) VALUES
+(1, 1, 'BONUS20-AAA111', 'unused', NULL, '2026-03-27 14:25:41', NULL),
+(2, 1, 'BONUS50-BBB222', 'used', NULL, '2026-03-27 14:25:41', NULL),
+(3, 2, 'BONUS20-CCC333', 'used', '2026-03-30 00:03:50', '2026-03-27 14:25:41', NULL),
+(4, 5, 'BONUS2681', 'used', '2026-03-30 00:03:40', '2026-03-29 23:47:38', NULL),
+(5, 5, 'BONUS3788', 'unused', NULL, '2026-03-30 00:06:02', NULL),
+(6, 5, 'BONUS3958', 'unused', NULL, '2026-03-30 00:10:15', NULL),
+(7, 5, 'BONUSFBC22F', 'used', '2026-03-30 00:12:16', '2026-03-30 00:11:07', NULL),
+(8, 5, 'BONUSAC8ABD', 'used', '2026-03-30 00:39:53', '2026-03-30 00:15:07', NULL),
+(9, 5, 'BONUS7B5A80', 'unused', NULL, '2026-03-30 00:32:03', NULL),
+(10, 5, 'BONUSAE0E5B', 'unused', NULL, '2026-03-30 01:05:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -114,7 +120,8 @@ INSERT INTO `discount_codes` (`id`, `code`, `discount_amount`, `min_price`, `usa
 (24, 'SE8876', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:01:53'),
 (25, 'SE3531', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:02:09'),
 (26, 'SE3248', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 10:05:28'),
-(27, 'SE1130', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 13:02:32');
+(27, 'SE1130', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 13:02:32'),
+(28, 'SE1953', 20.00, 0.00, 1, 0, 'ACTIVE', '2026-03-29 23:35:17');
 
 -- --------------------------------------------------------
 
@@ -150,7 +157,7 @@ INSERT INTO `games` (`id`, `name`, `image`, `status`, `created_at`, `category`) 
 (106, 'Steam Wallet', 'uploads/steam.jpg', 'ON', '2026-03-29 07:29:18', 'gift'),
 (107, 'PlayStation Gift Card', 'uploads/ps.jpg', 'ON', '2026-03-29 07:29:18', 'gift'),
 (108, 'Arena Breakout', 'uploads/arena.jpg', 'ON', '2026-03-29 07:29:18', 'mobile'),
-(109, 'EA Sports FC Mobile', 'uploads/fc.jpg', 'ON', '2026-03-29 07:29:18', 'mobile');
+(109, 'EA Sports FC Mobile', 'uploads/fc.jpg', 'OFF', '2026-03-29 07:29:18', 'mobile');
 
 -- --------------------------------------------------------
 
@@ -184,7 +191,8 @@ INSERT INTO `game_uids` (`id`, `user_id`, `game_id`, `uid`, `created_at`) VALUES
 (14, 5, 100, 'PunnNAJA#fyck', '2026-03-29 08:06:13'),
 (15, 5, 103, 'SudlorPunnPunn#007', '2026-03-29 10:12:56'),
 (16, 5, 101, 'D0esnotex1st#fyck', '2026-03-29 10:15:00'),
-(17, 5, 101, 'd0esnotex1st#fyck', '2026-03-29 10:15:05');
+(17, 5, 101, 'd0esnotex1st#fyck', '2026-03-29 10:15:05'),
+(18, 5, 2, 'PunnNAJA#fyck', '2026-03-30 00:25:12');
 
 -- --------------------------------------------------------
 
@@ -210,8 +218,8 @@ INSERT INTO `giftcard_stock` (`id`, `reward_id`, `code`, `status`, `used_by`, `u
 (1, 6, 'GIFT100-A1B2C3', 'available', NULL, NULL, '2026-03-27 14:25:36'),
 (2, 6, 'GIFT100-D4E5F6', 'available', NULL, NULL, '2026-03-27 14:25:36'),
 (3, 6, 'GIFT100-G7H8I9', 'available', NULL, NULL, '2026-03-27 14:25:36'),
-(4, 7, 'GIFT300-X1Y2Z3', 'available', NULL, NULL, '2026-03-27 14:25:36'),
-(5, 7, 'GIFT300-L4M5N6', 'available', NULL, NULL, '2026-03-27 14:25:36');
+(4, 7, 'GIFT300-X1Y2Z3', 'used', 5, '2026-03-29 23:54:34', '2026-03-27 14:25:36'),
+(5, 7, 'GIFT300-L4M5N6', 'used', 5, '2026-03-29 23:54:56', '2026-03-27 14:25:36');
 
 -- --------------------------------------------------------
 
@@ -267,7 +275,14 @@ INSERT INTO `orders` (`id`, `user_id`, `package_id`, `game_uid`, `status`, `crea
 (89, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:15:54', 200.00),
 (90, 5, 16, 'd0esnotex1st#fyck', 'success', '2026-03-29 10:16:10', 200.00),
 (91, 5, 16, 'PunnNAJA#fyck', 'success', '2026-03-29 10:16:22', 200.00),
-(92, 5, 13, 'PunnNAJA#fyck', 'success', '2026-03-29 12:50:23', 150.00);
+(92, 5, 13, 'PunnNAJA#fyck', 'success', '2026-03-29 12:50:23', 150.00),
+(93, 5, 3, '5', 'cancel', '2026-03-30 00:39:53', 0.00),
+(94, 5, 3, '5', 'pending', '2026-03-30 00:47:08', 50.00),
+(95, 5, 3, '5', 'pending', '2026-03-30 00:52:18', 30.00),
+(96, 5, 3, '5', 'pending', '2026-03-30 00:53:05', 30.00),
+(97, 5, 3, '5', 'pending', '2026-03-30 00:56:37', 50.00),
+(98, 5, 3, '5', 'pending', '2026-03-30 01:01:41', 50.00),
+(99, 5, 3, 'PunnNAJA#fyck', 'pending', '2026-03-30 01:05:40', 50.00);
 
 -- --------------------------------------------------------
 
@@ -319,8 +334,7 @@ INSERT INTO `packages` (`id`, `game_id`, `name`, `price`, `status`, `created_at`
 (33, 108, '60 Bonds', 30.00, 'ON', '2026-03-29 07:29:26'),
 (34, 108, '300 Bonds', 150.00, 'ON', '2026-03-29 07:29:26'),
 (35, 109, '100 FC Points', 35.00, 'ON', '2026-03-29 07:29:26'),
-(36, 109, '500 FC Points', 150.00, 'ON', '2026-03-29 07:29:26'),
-(37, 7, 'Punn 1hr', 1500.00, 'ON', '2026-03-29 12:21:15');
+(36, 109, '500 FC Points', 150.00, 'ON', '2026-03-29 07:29:26');
 
 -- --------------------------------------------------------
 
@@ -332,33 +346,31 @@ CREATE TABLE `rewards` (
   `id` int NOT NULL,
   `name` varchar(100) NOT NULL,
   `type` enum('balance','code','giftcard') NOT NULL,
-  `value` int NOT NULL,
   `point_cost` int NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `image` varchar(255) DEFAULT NULL,
-  `game_id` int DEFAULT NULL
+  `package_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `rewards`
 --
 
-INSERT INTO `rewards` (`id`, `name`, `type`, `value`, `point_cost`, `created_at`, `image`, `game_id`) VALUES
-(1, 'เงิน 10 บาท', 'balance', 10, 100, '2026-03-27 14:25:29', NULL, NULL),
-(2, 'เงิน 20 บาท', 'balance', 20, 180, '2026-03-27 14:25:29', NULL, NULL),
-(3, 'เงิน 50 บาท', 'balance', 50, 450, '2026-03-27 14:25:29', NULL, NULL),
-(4, 'Bonus Diamonds +20', 'code', 20, 200, '2026-03-27 14:25:29', NULL, 2),
-(5, 'Bonus Diamonds +50', 'code', 50, 450, '2026-03-27 14:25:29', NULL, 2),
-(6, 'Gift Card 100฿', 'giftcard', 100, 900, '2026-03-27 14:25:29', NULL, 107),
-(7, 'Gift Card 300฿', 'giftcard', 300, 2500, '2026-03-27 14:25:29', NULL, 107),
-(8, 'เงิน 5 บาท', 'balance', 5, 50, '2026-03-29 07:29:31', NULL, NULL),
-(9, 'เงิน 100 บาท', 'balance', 100, 900, '2026-03-29 07:29:31', NULL, NULL),
-(10, 'Bonus RP +100', 'code', 100, 300, '2026-03-29 07:29:31', NULL, 101),
-(11, 'Bonus VP +200', 'code', 200, 500, '2026-03-29 07:29:31', NULL, 100),
-(12, 'Steam Wallet 50฿', 'giftcard', 50, 450, '2026-03-29 07:29:31', NULL, 106),
-(13, 'Steam Wallet 100฿', 'giftcard', 100, 900, '2026-03-29 07:29:31', NULL, 106),
-(14, 'Netflix 1 เดือน', 'giftcard', 199, 1500, '2026-03-29 07:29:31', NULL, 104),
-(15, 'Spotify 1 เดือน', 'giftcard', 129, 1200, '2026-03-29 07:29:31', NULL, 105);
+INSERT INTO `rewards` (`id`, `name`, `type`, `point_cost`, `created_at`, `package_id`) VALUES
+(1, 'เงิน 10 บาท', 'balance', 100, '2026-03-27 14:25:29', NULL),
+(2, 'เงิน 20 บาท', 'balance', 180, '2026-03-27 14:25:29', NULL),
+(3, 'เงิน 50 บาท', 'balance', 450, '2026-03-27 14:25:29', NULL),
+(4, 'Pubg mobile 325 UC', 'code', 200, '2026-03-27 14:25:29', 1),
+(5, 'Free Fire 100 Diamonds', 'code', 450, '2026-03-27 14:25:29', 3),
+(6, 'Gift Card 100฿', 'giftcard', 900, '2026-03-27 14:25:29', NULL),
+(7, 'Gift Card 300฿', 'giftcard', 2500, '2026-03-27 14:25:29', NULL),
+(8, 'เงิน 5 บาท', 'balance', 50, '2026-03-29 07:29:31', NULL),
+(9, 'เงิน 100 บาท', 'balance', 900, '2026-03-29 07:29:31', NULL),
+(10, 'Bonus RP +100', 'code', 300, '2026-03-29 07:29:31', NULL),
+(11, 'Bonus VP +200', 'code', 500, '2026-03-29 07:29:31', NULL),
+(12, 'Steam Wallet 50฿', 'giftcard', 450, '2026-03-29 07:29:31', NULL),
+(13, 'Steam Wallet 100฿', 'giftcard', 900, '2026-03-29 07:29:31', NULL),
+(14, 'Netflix 1 เดือน', 'giftcard', 1500, '2026-03-29 07:29:31', NULL),
+(15, 'Spotify 1 เดือน', 'giftcard', 1200, '2026-03-29 07:29:31', NULL);
 
 -- --------------------------------------------------------
 
@@ -415,7 +427,14 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `order_id`, `crea
 (81, 5, 'purchase', -200.00, 89, '2026-03-29 10:15:54'),
 (82, 5, 'purchase', -200.00, 90, '2026-03-29 10:16:10'),
 (83, 5, 'purchase', -200.00, 91, '2026-03-29 10:16:22'),
-(84, 5, 'purchase', -150.00, 92, '2026-03-29 12:50:23');
+(84, 5, 'purchase', -150.00, 92, '2026-03-29 12:50:23'),
+(85, 5, 'purchase', 0.00, 93, '2026-03-30 00:39:53'),
+(86, 5, 'purchase', -50.00, 94, '2026-03-30 00:47:08'),
+(87, 5, 'purchase', -30.00, 95, '2026-03-30 00:52:18'),
+(88, 5, 'purchase', -30.00, 96, '2026-03-30 00:53:05'),
+(89, 5, 'purchase', -50.00, 97, '2026-03-30 00:56:37'),
+(90, 5, 'purchase', -50.00, 98, '2026-03-30 01:01:41'),
+(91, 5, 'purchase', -50.00, 99, '2026-03-30 01:05:40');
 
 -- --------------------------------------------------------
 
@@ -445,9 +464,10 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (2, 'player2', 'Mike', 'Johnson', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12', 0),
 (3, 'gamerx', 'Alex', 'Wong', '1234', 'gamerx@email.com', '0833333333', 1200.00, '2026-03-13 04:02:12', 800),
 (4, 'traveler', 'Lumine', 'Traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00', 0),
-(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 1556.00, '2026-03-14 04:46:43', 1650),
+(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 0.00, '2026-03-14 04:46:43', 2526),
 (6, 'iamveryhandsome', 'sudlor', 'punnpunn', '123456', 'PanyawatFaktim1209@gmail.com', '0984606569', 0.00, '2026-03-14 04:55:25', 0),
-(7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0);
+(7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0),
+(9, 'PunnyYY', 'ปัญญวัฒน์', 'ฟักทิม', 'pppp1248', 'panyawatfaktim@gmail.com', '', 0.00, '2026-03-30 02:27:37', 0);
 
 -- --------------------------------------------------------
 
@@ -486,7 +506,18 @@ INSERT INTO `user_rewards` (`id`, `user_id`, `reward_id`, `detail`, `created_at`
 (15, 5, 8, '+5 balance', '2026-03-29 12:56:39', 'success'),
 (16, 5, 8, '+5 balance', '2026-03-29 12:56:42', 'success'),
 (17, 5, 8, '+5 balance', '2026-03-29 12:56:43', 'success'),
-(18, 5, 4, 'SE1130', '2026-03-29 13:02:32', 'success');
+(18, 5, 4, 'SE1130', '2026-03-29 13:02:32', 'success'),
+(19, 5, 8, '+5 balance', '2026-03-29 23:27:30', 'success'),
+(20, 5, 4, 'SE1953', '2026-03-29 23:35:17', 'success'),
+(21, 5, 11, 'BONUS2681', '2026-03-29 23:47:38', 'success'),
+(22, 5, 7, 'GIFT300-X1Y2Z3', '2026-03-29 23:54:34', 'success'),
+(23, 5, 7, 'GIFT300-L4M5N6', '2026-03-29 23:54:56', 'success'),
+(24, 5, 11, 'BONUS3788', '2026-03-30 00:06:02', 'success'),
+(25, 5, 4, 'BONUS3958', '2026-03-30 00:10:15', 'success'),
+(26, 5, 4, 'BONUSFBC22F', '2026-03-30 00:11:07', 'success'),
+(27, 5, 4, 'BONUSAC8ABD', '2026-03-30 00:15:07', 'success'),
+(28, 5, 4, 'BONUS7B5A80', '2026-03-30 00:32:03', 'success'),
+(29, 5, 4, 'BONUSAE0E5B', '2026-03-30 01:05:32', 'success');
 
 --
 -- Indexes for dumped tables
@@ -504,7 +535,8 @@ ALTER TABLE `admins`
 ALTER TABLE `bonus_codes`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `fk_bonus_package` (`package_id`);
 
 --
 -- Indexes for table `discount_codes`
@@ -556,7 +588,7 @@ ALTER TABLE `packages`
 --
 ALTER TABLE `rewards`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_reward_game` (`game_id`);
+  ADD KEY `fk_reward_package` (`package_id`);
 
 --
 -- Indexes for table `transactions`
@@ -595,13 +627,13 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `bonus_codes`
 --
 ALTER TABLE `bonus_codes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `discount_codes`
 --
 ALTER TABLE `discount_codes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `games`
@@ -613,7 +645,7 @@ ALTER TABLE `games`
 -- AUTO_INCREMENT for table `game_uids`
 --
 ALTER TABLE `game_uids`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `giftcard_stock`
@@ -625,7 +657,7 @@ ALTER TABLE `giftcard_stock`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT for table `packages`
@@ -643,19 +675,19 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_rewards`
 --
 ALTER TABLE `user_rewards`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
@@ -665,7 +697,8 @@ ALTER TABLE `user_rewards`
 -- Constraints for table `bonus_codes`
 --
 ALTER TABLE `bonus_codes`
-  ADD CONSTRAINT `bonus_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `bonus_codes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `fk_bonus_package` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`);
 
 --
 -- Constraints for table `game_uids`
@@ -698,7 +731,7 @@ ALTER TABLE `packages`
 -- Constraints for table `rewards`
 --
 ALTER TABLE `rewards`
-  ADD CONSTRAINT `fk_reward_game` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`);
+  ADD CONSTRAINT `fk_reward_package` FOREIGN KEY (`package_id`) REFERENCES `packages` (`id`);
 
 --
 -- Constraints for table `transactions`

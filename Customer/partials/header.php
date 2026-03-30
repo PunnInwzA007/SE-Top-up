@@ -8,10 +8,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 require_once __DIR__ . '/../../config/db.php';
 $balance = 0;
 if(isset($_SESSION['user_id'])){
-  $uid = $_SESSION['user_id'];
+  $current_user_id = $_SESSION['user_id']; // เปลี่ยนจาก $uid เป็น $current_user_id
 
   $stmt = $conn->prepare("SELECT balance FROM users WHERE id = ?");
-  $stmt->bind_param("i", $uid);
+  $stmt->bind_param("i", $current_user_id);
   $stmt->execute();
   $result = $stmt->get_result();
 
@@ -68,16 +68,14 @@ if(isset($_SESSION['user_id'])){
         <?php if(isset($_SESSION['user_id'])): ?>
           <div class="dropdown">
             <a class="se-nav-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              👤 <?= htmlspecialchars($_SESSION['username']) ?>
+              <?= htmlspecialchars($_SESSION['username']) ?>
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end">
 
-              <!-- 💰 BALANCE -->
               <li class="px-3 py-2">
                  เงินคงเหลือ: <strong><?= number_format($balance, 2) ?> บาท</strong>
               </li>
-              <!-- 🎁 REDEEM -->
               <li><hr class="dropdown-divider"></li>
 
               <li>

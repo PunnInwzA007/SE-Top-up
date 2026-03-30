@@ -11,11 +11,16 @@ $reward_id = $_GET['id'] ?? 0;
 $reward = $conn->query("
   SELECT r.*, g.image AS game_image
   FROM rewards r
-  LEFT JOIN games g ON r.game_id = g.id
+  LEFT JOIN packages p ON r.package_id = p.id
+  LEFT JOIN games g ON p.game_id = g.id
   WHERE r.id = $reward_id
 ")->fetch_assoc();
 
-$user = $conn->query("SELECT points FROM users WHERE id = $user_id")->fetch_assoc();
+$user = $conn->query("
+  SELECT points, balance 
+  FROM users 
+  WHERE id = $user_id
+")->fetch_assoc();
 
 if(!$reward){
   die("Reward not found");
@@ -35,17 +40,34 @@ if(isset($_POST['confirm']) && empty($error)){
   try {
     $detail = null;
 
+    /* ===== BALANCE ===== */
     if($reward['type'] == 'balance'){
-      $conn->query("UPDATE users SET balance = balance + {$reward['value']} WHERE id = $user_id");
-      $detail = "+{$reward['value']} balance";
+      // ดึงจำนวนเงินจากชื่อ เช่น "เงิน 50 บาท"
+      preg_match('/\d+/', $reward['name'], $match);
+      $amount = $match[0] ?? 0;
+
+      $conn->query("
+        UPDATE users 
+        SET balance = balance + $amount 
+        WHERE id = $user_id
+      ");
+
+      $detail = "+$amount บาท";
     }
 
+    /* ===== CODE ===== */
     if($reward['type'] == 'code'){
-      $code = "SE" . rand(1000,9999);
-      $conn->query("INSERT INTO discount_codes (code, discount_amount, usage_limit) VALUES ('$code', {$reward['value']}, 1)");
+      $code = "BONUS" . strtoupper(bin2hex(random_bytes(3)));
+
+      $conn->query("
+        INSERT INTO bonus_codes (user_id, code, status, package_id)
+        VALUES ($user_id, '$code', 'unused', ".($reward['package_id'] ?? "NULL").")
+      ");
+
       $detail = $code;
     }
 
+    /* ===== GIFTCARD ===== */
     if($reward['type'] == 'giftcard'){
       $gift = $conn->query("
         SELECT * FROM giftcard_stock 
@@ -66,14 +88,14 @@ if(isset($_POST['confirm']) && empty($error)){
       $detail = $gift['code'];
     }
 
-    // หัก point
+    /* ===== หัก POINT ===== */
     $conn->query("
       UPDATE users 
       SET points = points - {$reward['point_cost']}
       WHERE id = $user_id
     ");
 
-    // history
+    /* ===== HISTORY ===== */
     $conn->query("
       INSERT INTO user_rewards (user_id, reward_id, detail, status)
       VALUES ($user_id, {$reward['id']}, '$detail', 'success')
@@ -101,7 +123,6 @@ function getRewardImage($r){
     : '../admin/uploads/default.png';
 }
 ?>
-
 <?php include "partials/header.php"; ?>
 
 <section class="se-section">
