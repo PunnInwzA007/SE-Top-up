@@ -3,6 +3,7 @@ session_start();
 require_once "../config/db.php";
 
 $error = "";
+$success = "";
 
 /* ================= LOGIN ================= */
 
@@ -45,36 +46,61 @@ $error = "User not found";
 
 /* ================= REGISTER ================= */
 
+/* ================= REGISTER ================= */
+
 if(isset($_POST['register'])){
 
-$username = $_POST['reg_username'];
-$firstname = $_POST['firstname'];
-$lastname = $_POST['lastname'];
-$password = $_POST['reg_password'];
-$email = $_POST['email'];
-$phone = $_POST['phone'];
+$username  = isset($_POST['reg_username']) ? trim($_POST['reg_username']) : '';
+$firstname = isset($_POST['firstname']) ? trim($_POST['firstname']) : '';
+$lastname  = isset($_POST['lastname']) ? trim($_POST['lastname']) : '';
+$password  = isset($_POST['reg_password']) ? trim($_POST['reg_password']) : '';
+$confirm   = isset($_POST['confirm_password']) ? trim($_POST['confirm_password']) : '';
+$email     = isset($_POST['email']) ? trim($_POST['email']) : '';
+$phone     = isset($_POST['phone']) ? trim($_POST['phone']) : '';
 
-$stmt = $conn->prepare(
-"INSERT INTO users (username, firstname, lastname, password, email, phone)
-VALUES (?,?,?,?,?,?)"
-);
+/* ===== VALIDATION ===== */
 
-$stmt->bind_param(
-"ssssss",
-$username,
-$firstname,
-$lastname,
-$password,
-$email,
-$phone
-);
-
-if($stmt->execute()){
-$error = "Register success. Please login.";
-}else{
-$error = "Username already exists";
+if(empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($phone)){
+    $error = "กรุณากรอกข้อมูลให้ครบ";
 }
+elseif($password !== $confirm){
+    $error = "รหัสผ่านไม่ตรงกัน";
+}
+else{
 
+    // 🔍 เช็ค username ซ้ำ
+    $stmt = $conn->prepare("SELECT id FROM users WHERE username=?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if($result->num_rows > 0){
+        $error = "Username นี้ถูกใช้แล้ว";
+    }else{
+
+        // 🔥 INSERT
+        $stmt = $conn->prepare("
+        INSERT INTO users (username, firstname, lastname, password, email, phone)
+        VALUES (?,?,?,?,?,?)
+        ");
+
+        $stmt->bind_param(
+        "ssssss",
+        $username,
+        $firstname,
+        $lastname,
+        $password,
+        $email,
+        $phone
+        );
+
+        if($stmt->execute()){
+            $success = "สมัครสำเร็จ กรุณา login";
+        }else{
+            $error = "เกิดข้อผิดพลาด";
+        }
+    }
+}
 }
 
 ?>
@@ -95,6 +121,10 @@ $error = "Username already exists";
 
         <?php if($error): ?>
             <div class="alert alert-danger mb-4"><?= $error ?></div>
+        <?php endif; ?>
+
+        <?php if($success): ?>
+            <div class="alert alert-success mb-4"><?= $success ?></div>
         <?php endif; ?>
 
         <div class="row g-4">
@@ -189,12 +219,19 @@ $error = "Username already exists";
                 placeholder="Password"
                 required
                 >
-
+                <input
+                type="password"
+                name="confirm_password"
+                class="form-control mb-3"
+                placeholder="Confirm Password"
+                required
+                >
                 <input
                 type="text"
                 name="phone"
                 class="form-control mb-4"
                 placeholder="Phone"
+                required
                 >
                 
                 <button

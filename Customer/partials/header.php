@@ -74,7 +74,7 @@ if(isset($_SESSION['user_id'])){
             <ul class="dropdown-menu dropdown-menu-end">
 
               <li class="px-3 py-2">
-                 เงินคงเหลือ: <strong><?= number_format($balance, 2) ?> บาท</strong>
+                 เงินคงเหลือ:<br> <strong><?= number_format($balance, 2) ?> บาท</strong>
               </li>
               <li><hr class="dropdown-divider"></li>
 
