@@ -91,6 +91,14 @@
                  name="name"
                  id="editGameName"
                  required>
+                 
+          <label>Category</label>
+          <select name="category" id="editGameCategory" class="form-control mb-3">
+            <option value="mobile">Mobile</option>
+            <option value="pc">PC</option>
+            <option value="gift">Gift</option>
+            <option value="sub">Subscription</option>
+          </select>
 
           <label>Status</label>
           <select name="status"
@@ -188,7 +196,15 @@
                  name="name"
                  class="form-control mb-3"
                  required>
-
+            
+          <label>Category</label>
+          <select name="category" class="form-control mb-3">
+            <option value="mobile">Mobile</option>
+            <option value="pc">PC</option>
+            <option value="gift">Gift</option>
+            <option value="sub">Subscription</option>
+          </select>
+          
           <label>Status</label>
           <select name="status"
                   class="form-control mb-3">

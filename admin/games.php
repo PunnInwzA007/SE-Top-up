@@ -71,6 +71,7 @@ $result = $conn->query($sql);
                 <th></th>
                 <th>ประเภทสินค้า</th>
                 <th>Status</th>
+                <th>Category</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -89,7 +90,7 @@ $result = $conn->query($sql);
 
                 <!-- Name -->
                 <td><?= $row["name"] ?></td>
-
+                <td><?= $row['category'] ?></td>
                 <!-- Status -->
                 <td>
                   <?php if($row["status"]=="ON"): ?>
@@ -107,7 +108,8 @@ $result = $conn->query($sql);
                           data-target="#editGameModal"
                           data-id="<?= $row['id'] ?>"
                           data-name="<?= htmlspecialchars($row['name']) ?>"
-                          data-status="<?= $row['status'] ?>">
+                          data-status="<?= $row['status'] ?>"
+                          data-category="<?= $row['category'] ?>">
                     Edit
                   </button>
 

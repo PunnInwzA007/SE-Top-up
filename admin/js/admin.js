@@ -89,3 +89,9 @@ $('#editUserModal').on('show.bs.modal', function (event) {
   $('#editEmail').val(button.data('email'));
   $('#editStatus').val(button.data('status'));
 });
+
+$('#editGameModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+
+  $('#editGameCategory').val(button.data('category'));
+});
