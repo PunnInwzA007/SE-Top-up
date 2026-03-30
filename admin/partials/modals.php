@@ -594,3 +594,93 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="addDiscountModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="add_discount.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Add Discount Code</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Code</label>
+            <input type="text" name="code" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Discount Amount</label>
+            <input type="number" name="discount_amount" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Minimum Price</label>
+            <input type="number" name="min_price" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Usage Limit</label>
+            <input type="number" name="usage_limit" class="form-control">
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary">Add</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addBonusModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="add_bonus.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Add Bonus Code</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Package</label>
+            <select name="package_id" class="form-control">
+              <?php
+              $pk = $conn->query("SELECT id,name FROM packages");
+              while($p = $pk->fetch_assoc()):
+              ?>
+              <option value="<?= $p['id'] ?>">
+                <?= $p['name'] ?>
+              </option>
+              <?php endwhile; ?>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Codes</label>
+            <textarea name="codes" class="form-control" rows="5"
+              placeholder="1 code ต่อ 1 บรรทัด"></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary">Add</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

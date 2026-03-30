@@ -42,6 +42,12 @@
     <li class="nav-item <?= ($activePage=="giftcards") ? "active" : "" ?>">
       <a class="nav-link" href="giftcards.php">Giftcards</a>
     </li>
+    <li class="nav-item <?= ($activePage=="discounts") ? "active" : "" ?>">
+      <a class="nav-link" href="discounts.php">Discount Codes</a>
+    </li>
+    <li class="nav-item <?= ($activePage=="bonus_codes") ? "active" : "" ?>">
+      <a class="nav-link" href="bonus_codes.php">Bonus Codes</a>
+    </li>
     <!-- Logout Trigger -->
     <li class="nav-item">
       <a class="nav-link"
