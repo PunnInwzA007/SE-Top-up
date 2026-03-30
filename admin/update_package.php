@@ -7,6 +7,7 @@ $name    = $_POST['name'];
 $price   = $_POST['price'];
 $status  = $_POST['status'];
 
+if ($price < 0) { $price = 0; }
 $sql = "UPDATE packages
         SET game_id='$game_id',
             name='$name',
