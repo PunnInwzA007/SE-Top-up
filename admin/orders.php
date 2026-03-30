@@ -19,8 +19,8 @@ SELECT
     games.name AS game_name
 FROM orders
 JOIN users ON orders.user_id = users.id
-JOIN packages ON orders.package_id = packages.id
-JOIN games ON packages.game_id = games.id
+LEFT JOIN packages ON orders.package_id = packages.id
+LEFT JOIN games ON packages.game_id = games.id
 WHERE 1=1
 ";
 
