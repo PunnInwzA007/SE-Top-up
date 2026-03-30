@@ -40,6 +40,8 @@ $stmt->bind_param("i", $package_id);
 $stmt->execute();
 $package = $stmt->get_result()->fetch_assoc();
 
+$game_name = $package['game_name'];
+$package_name = $package['name'];
 if(!$package){ die("Package not found"); }
 
 $base_price = $package['price']; 
@@ -70,8 +72,16 @@ if(isset($_POST['confirm'])){
             $stmt->execute();
 
             // 🧾 สร้าง order
-            $stmt = $conn->prepare("INSERT INTO orders (user_id, package_id, game_uid, price, status) VALUES (?,?,?,?, 'pending')");
-            $stmt->bind_param("iisd", $user_id, $package_id, $uid, $total_price);
+            $stmt = $conn->prepare("INSERT INTO orders (user_id, package_id, game_uid, price, status, game_name, package_name)VALUES (?,?,?,?, 'pending', ?, ?)");
+            $stmt->bind_param(
+              "iisdss",
+              $user_id,
+              $package_id,
+              $uid,
+              $total_price,
+              $game_name,
+              $package_name
+            );
             $stmt->execute();
             
             $order_id = $conn->insert_id;

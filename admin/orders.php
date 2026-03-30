@@ -14,9 +14,9 @@ SELECT
     orders.game_uid,
     orders.status,
     orders.created_at,
-    packages.name AS package_name,
+    orders.package_name AS package_name,
     orders.price,
-    games.name AS game_name
+    orders.game_name AS game_name
 FROM orders
 JOIN users ON orders.user_id = users.id
 LEFT JOIN packages ON orders.package_id = packages.id

@@ -43,8 +43,7 @@ if(isset($_POST['confirm']) && empty($error)){
     /* ===== BALANCE ===== */
     if($reward['type'] == 'balance'){
       // ดึงจำนวนเงินจากชื่อ เช่น "เงิน 50 บาท"
-      preg_match('/\d+/', $reward['name'], $match);
-      $amount = $match[0] ?? 0;
+      $amount = $reward['amount'];
 
       $conn->query("
         UPDATE users 

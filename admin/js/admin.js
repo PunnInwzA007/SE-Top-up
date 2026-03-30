@@ -70,4 +70,14 @@ $(function () {
 
 });
 
+$('#editRewardModal').on('show.bs.modal', function (event) {
+  const btn = $(event.relatedTarget);
 
+  $('#editRewardId').val(btn.data('id'));
+  $('#editRewardName').val(btn.data('name'));
+  $('#editRewardType').val(btn.data('type'));
+  $('#editRewardValue').val(btn.data('value'));
+  $('#editRewardPackage').val(btn.data('package'));
+
+  $('#deleteRewardBtn').attr('href', 'delete_reward.php?id=' + btn.data('id'));
+});

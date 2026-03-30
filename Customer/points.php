@@ -44,6 +44,7 @@ $rewardResult = $conn->query("
   FROM rewards r
   LEFT JOIN packages p ON r.package_id = p.id
   LEFT JOIN games g ON p.game_id = g.id
+  WHERE r.status='ON'
   ORDER BY r.point_cost ASC
 ");
 function getRewardImage($r){

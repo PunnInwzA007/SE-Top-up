@@ -15,11 +15,9 @@ orders.created_at,
 orders.game_uid,
 orders.status,
 orders.price,
-packages.name AS package_name,
-games.name AS game_name
+orders.package_name,
+orders.game_name
 FROM orders
-JOIN packages ON packages.id = orders.package_id
-JOIN games ON games.id = packages.game_id
 WHERE orders.user_id = $user_id
 ";
 if(!empty($search)){
@@ -27,8 +25,8 @@ if(!empty($search)){
 $search = $conn->real_escape_string($search);
 
 $sql .= " AND (
-games.name LIKE '%$search%'
-OR packages.name LIKE '%$search%'
+orders.game_name LIKE '%$search%'
+OR orders.package_name LIKE '%$search%'
 OR orders.game_uid LIKE '%$search%'
 OR orders.price LIKE '%$search%'
 OR orders.id LIKE '%$search%'
@@ -145,7 +143,7 @@ ORDER BY name ASC
             </td>
 
             <td>
-            <?= htmlspecialchars($row["game_name"]) ?>
+            <?= $row["game_name"] ?>
             </td>
 
             <td>
@@ -153,7 +151,7 @@ ORDER BY name ASC
             </td>
 
             <td>
-            <?= htmlspecialchars($row["package_name"]) ?>
+            <?= $row["package_name"] ?>
             </td>
 
             <td>

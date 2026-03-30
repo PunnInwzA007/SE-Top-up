@@ -417,3 +417,135 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="addRewardModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="add_reward.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Add Reward</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Type</label>
+            <select name="type" class="form-control">
+              <option value="balance">Balance</option>
+              <option value="code">Code</option>
+              <option value="giftcard">Giftcard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Package</label>
+            <select name="package_id" class="form-control">
+              <option value="">None</option>
+              <?php
+              $pk = $conn->query("SELECT * FROM packages");
+              while($p = $pk->fetch_assoc()):
+              ?>
+              <option value="<?= $p['id'] ?>">
+                <?= $p['name'] ?>
+              </option>
+              <?php endwhile; ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Point Cost</label>
+            <input type="number" name="point_cost" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" name="amount" class="form-control" placeholder="ใส่จำนวน เช่น 10">
+          </div>
+        </div>
+              
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editRewardModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="update_reward.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Reward</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <input type="hidden" name="id" id="editRewardId">
+
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" id="editRewardName" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Type</label>
+            <select name="type" id="editRewardType" class="form-control">
+              <option value="balance">Balance</option>
+              <option value="code">Code</option>
+              <option value="giftcard">Giftcard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Package</label>
+            <select name="package_id" id="editRewardPackage" class="form-control">
+              <option value="">None</option>
+              <?php
+              $pk = $conn->query("SELECT * FROM packages");
+              while($p = $pk->fetch_assoc()):
+              ?>
+              <option value="<?= $p['id'] ?>">
+                <?= $p['name'] ?>
+              </option>
+              <?php endwhile; ?>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Point Cost</label>
+            <input type="number" name="point_cost" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" name="amount" id="editAmount" class="form-control">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+          <a href="#" id="deleteRewardBtn" class="btn btn-danger">
+            Delete
+          </a>
+
+          <button type="submit" class="btn btn-primary">
+            Save
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
