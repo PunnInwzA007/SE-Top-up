@@ -83,7 +83,7 @@ if(isset($_SESSION['user_id'])){
               </li>
 
               <li>
-                <a class="dropdown-item" href="history.php">เติมเงิน</a>
+                <a class="dropdown-item" href="topup_balance.php">เติมเงิน</a>
               </li>
 
               <li>
