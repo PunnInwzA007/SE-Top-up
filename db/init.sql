@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 30, 2026 at 03:07 AM
+-- Generation Time: Mar 30, 2026 at 04:54 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -70,7 +70,8 @@ INSERT INTO `bonus_codes` (`id`, `user_id`, `code`, `status`, `used_at`, `create
 (7, 5, 'BONUSFBC22F', 'used', '2026-03-30 00:12:16', '2026-03-30 00:11:07', NULL),
 (8, 5, 'BONUSAC8ABD', 'used', '2026-03-30 00:39:53', '2026-03-30 00:15:07', NULL),
 (9, 5, 'BONUS7B5A80', 'unused', NULL, '2026-03-30 00:32:03', NULL),
-(10, 5, 'BONUSAE0E5B', 'unused', NULL, '2026-03-30 01:05:32', NULL);
+(10, 5, 'BONUSAE0E5B', 'unused', NULL, '2026-03-30 01:05:32', NULL),
+(11, 5, 'BONUS49A015', 'unused', NULL, '2026-03-30 04:51:58', 1);
 
 -- --------------------------------------------------------
 
@@ -359,7 +360,7 @@ INSERT INTO `rewards` (`id`, `name`, `type`, `point_cost`, `created_at`, `packag
 (1, 'เงิน 10 บาท', 'balance', 100, '2026-03-27 14:25:29', NULL),
 (2, 'เงิน 20 บาท', 'balance', 180, '2026-03-27 14:25:29', NULL),
 (3, 'เงิน 50 บาท', 'balance', 450, '2026-03-27 14:25:29', NULL),
-(4, 'Pubg mobile 325 UC', 'code', 200, '2026-03-27 14:25:29', 1),
+(4, 'ROV 325 UC', 'code', 200, '2026-03-27 14:25:29', 1),
 (5, 'Free Fire 100 Diamonds', 'code', 450, '2026-03-27 14:25:29', 3),
 (6, 'Gift Card 100฿', 'giftcard', 900, '2026-03-27 14:25:29', NULL),
 (7, 'Gift Card 300฿', 'giftcard', 2500, '2026-03-27 14:25:29', NULL),
@@ -464,7 +465,7 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (2, 'player2', 'Mike', 'Johnson', '1234', 'player2@email.com', '0822222222', 300.00, '2026-03-13 04:02:12', 0),
 (3, 'gamerx', 'Alex', 'Wong', '1234', 'gamerx@email.com', '0833333333', 1200.00, '2026-03-13 04:02:12', 800),
 (4, 'traveler', 'Lumine', 'Traveler', '1234', 'traveler@email.com', '0812345678', 500.00, '2026-03-13 04:10:00', 0),
-(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 0.00, '2026-03-14 04:46:43', 2526),
+(5, 'PunnBigD_ata', 'Punn', 'InwzA', '007', 'panyawatfaktim@email.com', '0616742970', 0.00, '2026-03-14 04:46:43', 2326),
 (6, 'iamveryhandsome', 'sudlor', 'punnpunn', '123456', 'PanyawatFaktim1209@gmail.com', '0984606569', 0.00, '2026-03-14 04:55:25', 0),
 (7, 'PunnyS', 'kuy', 'yaimakmak', '1234', 'abc@email.com', '0616742970', 0.00, '2026-03-25 06:03:15', 0),
 (9, 'PunnyYY', 'ปัญญวัฒน์', 'ฟักทิม', 'pppp1248', 'panyawatfaktim@gmail.com', '', 0.00, '2026-03-30 02:27:37', 0);
@@ -517,7 +518,8 @@ INSERT INTO `user_rewards` (`id`, `user_id`, `reward_id`, `detail`, `created_at`
 (26, 5, 4, 'BONUSFBC22F', '2026-03-30 00:11:07', 'success'),
 (27, 5, 4, 'BONUSAC8ABD', '2026-03-30 00:15:07', 'success'),
 (28, 5, 4, 'BONUS7B5A80', '2026-03-30 00:32:03', 'success'),
-(29, 5, 4, 'BONUSAE0E5B', '2026-03-30 01:05:32', 'success');
+(29, 5, 4, 'BONUSAE0E5B', '2026-03-30 01:05:32', 'success'),
+(30, 5, 4, 'BONUS49A015', '2026-03-30 04:51:58', 'success');
 
 --
 -- Indexes for dumped tables
@@ -627,7 +629,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `bonus_codes`
 --
 ALTER TABLE `bonus_codes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `discount_codes`
@@ -687,7 +689,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_rewards`
 --
 ALTER TABLE `user_rewards`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables

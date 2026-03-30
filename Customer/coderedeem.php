@@ -2,63 +2,6 @@
 require_once "auth.php";
 require_once "../config/db.php";
 
-if(isset($_POST['go_checkout'])){
-
-  $code = $_POST['code'];
-  $uid = $_POST['uid'];
-
-  if(empty($uid)){
-    $error = "กรุณากรอก UID";
-  } else {
-
-    // 🔍 หา bonus code
-    $stmt = $conn->prepare("
-      SELECT * FROM bonus_codes 
-      WHERE code = ? AND status = 'unused'
-      LIMIT 1
-    ");
-    $stmt->bind_param("s", $code);
-    $stmt->execute();
-    $codeData = $stmt->get_result()->fetch_assoc();
-
-    if(!$codeData){
-      $error = "โค้ดไม่ถูกต้อง";
-    } else {
-
-      // 🔥 ดึง package ของ reward นี้
-      // (สมมติ bonus_codes มี package_id แล้ว)
-      $package_id = $codeData['package_id'];
-
-      $stmt = $conn->prepare("
-        SELECT price FROM packages WHERE id = ?
-      ");
-      $stmt->bind_param("i", $package_id);
-      $stmt->execute();
-      $pkg = $stmt->get_result()->fetch_assoc();
-
-      if(!$pkg){
-        $error = "Package ไม่ถูกต้อง";
-      } else {
-
-        // 🔥 SET SESSION (สำคัญสุด)
-        $_SESSION['checkout']['package_id'] = $package_id;
-        $_SESSION['checkout']['uid'] = $uid;
-
-        // 👇 ทำให้ฟรี 100%
-        $_SESSION['checkout']['discount'] = $pkg['price'];
-
-        // เก็บไว้ mark used ตอน checkout
-        $_SESSION['checkout']['redeem_code'] = $code;
-
-        // 🔥 ไป checkout เลย
-        header("Location: checkout.php");
-        exit;
-      }
-    }
-  }
-}
-?>
-<?php
 $user_id = $_SESSION['user_id'];
 
 $error = null;
@@ -77,9 +20,10 @@ if(isset($_POST['check_code'])){
   } else {
 
     $stmt = $conn->prepare("
-      SELECT bc.*, g.name AS game_name 
+      SELECT bc.*, p.game_id, p.price, g.name AS game_name
       FROM bonus_codes bc
-      LEFT JOIN games g ON bc.game_id = g.id
+      LEFT JOIN packages p ON bc.package_id = p.id
+      LEFT JOIN games g ON p.game_id = g.id
       WHERE bc.code = ? AND bc.status = 'unused'
       LIMIT 1
     ");
@@ -92,9 +36,9 @@ if(isset($_POST['check_code'])){
       $error = "โค้ดไม่ถูกต้อง หรือถูกใช้ไปแล้ว";
     } else {
 
+      // 🔥 ดึง UID ของ user สำหรับเกมนี้
       $game_id = $codeData['game_id'];
 
-      // 🔥 ดึง UID ของเกมนั้น
       $uids = $conn->query("
         SELECT * FROM game_uids 
         WHERE user_id = $user_id AND game_id = $game_id
@@ -109,20 +53,40 @@ if(isset($_POST['check_code'])){
 if(isset($_POST['go_checkout'])){
 
   $code = $_POST['code'];
-  $uid = $_POST['uid'];
-  $game_id = $_POST['game_id'];
+  $uid = trim($_POST['uid']);
 
   if(empty($uid)){
     $error = "กรุณากรอก UID";
   } else {
 
-    // 🔥 redirect ไป checkout
-    $_SESSION['checkout']['uid'] = $uid;
-    $_SESSION['checkout']['redeem_code'] = $code;
-    $_SESSION['checkout']['game_id'] = $game_id;
+    // 🔒 เช็ค code ซ้ำอีกรอบกันโกง
+    $stmt = $conn->prepare("
+      SELECT bc.*, p.price
+      FROM bonus_codes bc
+      LEFT JOIN packages p ON bc.package_id = p.id
+      WHERE bc.code = ? AND bc.status = 'unused'
+      LIMIT 1
+    ");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+    $codeData = $stmt->get_result()->fetch_assoc();
 
-    header("Location: checkout.php");
-    exit;
+    if(!$codeData){
+      $error = "โค้ดไม่ถูกต้อง หรือถูกใช้ไปแล้ว";
+    } else {
+
+      $package_id = $codeData['package_id'];
+      $price = $codeData['price'];
+
+      // 🔥 SESSION ไป checkout
+      $_SESSION['checkout']['package_id'] = $package_id;
+      $_SESSION['checkout']['uid'] = $uid;
+      $_SESSION['checkout']['discount'] = $price; // ฟรี 100%
+      $_SESSION['checkout']['redeem_code'] = $code;
+
+      header("Location: checkout.php");
+      exit;
+    }
   }
 }
 ?>
@@ -138,7 +102,7 @@ if(isset($_POST['go_checkout'])){
 
           <h4 style="font-weight:900;">🎁 Redeem Code</h4>
 
-          <!-- STEP 1 -->
+          <!-- ================= STEP 1 ================= -->
           <?php if(!$codeData): ?>
 
           <form method="POST">
@@ -159,23 +123,25 @@ if(isset($_POST['go_checkout'])){
 
           <?php endif; ?>
 
-          <!-- STEP 2 -->
+          <!-- ================= STEP 2 ================= -->
           <?php if($codeData): ?>
 
-          <div class="mt-3">
-            <strong>เกม:</strong> <?= htmlspecialchars($codeData['game_name']) ?><br>
-            <strong>โบนัส:</strong> -<?= $codeData['value'] ?>
+          <div class="mt-3 mb-3 p-3" style="background:#f5f5f5;border-radius:10px;">
+            <div><strong>เกม:</strong> <?= htmlspecialchars($codeData['game_name']) ?></div>
+            <div><strong>แพ็กเกจ:</strong> <?= htmlspecialchars($codeData['package_id']) ?></div>
+            <div><strong>ราคา:</strong> <?= number_format($codeData['price']) ?> บาท</div>
+            <div style="color:green;"><strong>ส่วนลด:</strong> ฟรี 100%</div>
           </div>
 
-          <form method="POST" class="mt-3">
+          <form method="POST">
 
             <input type="hidden" name="code" value="<?= $codeData['code'] ?>">
-            <input type="hidden" name="game_id" value="<?= $codeData['game_id'] ?>">
 
             <!-- UID INPUT -->
             <input 
               type="text"
               name="uid"
+              id="uidInput"
               class="form-control mb-3"
               placeholder="กรอก UID"
               required
@@ -183,7 +149,7 @@ if(isset($_POST['go_checkout'])){
 
             <!-- UID LIST -->
             <?php if($uids && $uids->num_rows > 0): ?>
-              <select class="form-select mb-3" onchange="this.previousElementSibling.value=this.value">
+              <select class="form-select mb-3" onchange="document.getElementById('uidInput').value=this.value">
                 <option value="">-- เลือก UID ที่เคยใช้ --</option>
                 <?php while($u = $uids->fetch_assoc()): ?>
                   <option value="<?= $u['uid'] ?>">
@@ -194,7 +160,7 @@ if(isset($_POST['go_checkout'])){
             <?php endif; ?>
 
             <button class="se-btn-green w-100" name="go_checkout">
-              ดำเนินการต่อ
+              ดำเนินการต่อไป Checkout
             </button>
 
           </form>

@@ -103,6 +103,20 @@ if(isset($_POST['confirm'])){
         }
     }
 }
+// 🔥 mark code used
+if(isset($_SESSION['checkout']['redeem_code'])){
+    $code = $_SESSION['checkout']['redeem_code'];
+
+    $stmt = $conn->prepare("
+      UPDATE bonus_codes 
+      SET status='used', used_at=NOW() 
+      WHERE code=? 
+    ");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    unset($_SESSION['checkout']['redeem_code']);
+}
 ?>
 
 <?php include "partials/header.php"; ?>
