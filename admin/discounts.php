@@ -7,7 +7,7 @@ $search = $_GET['search'] ?? '';
 
 $sql = "
 SELECT * FROM discount_codes
-WHERE 1=1
+WHERE status = 'ACTIVE'
 ";
 
 if(!empty($search)){
@@ -33,7 +33,17 @@ Discount Codes
 </h1>
 
 <div class="card shadow p-4">
+<?php if(isset($_GET['success'])): ?>
+  <div class="alert alert-success">
+    ลบ Discount Code เรียบร้อยแล้ว
+  </div>
+<?php endif; ?>
 
+<?php if(isset($_GET['error'])): ?>
+  <div class="alert alert-danger">
+    เกิดข้อผิดพลาด
+  </div>
+<?php endif; ?>
 <form method="GET" class="d-flex justify-content-between mb-4">
 
 <input type="text"
