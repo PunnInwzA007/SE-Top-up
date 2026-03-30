@@ -27,6 +27,17 @@ $result = $conn->query($sql);
 
       <!-- ================= Page Content ================= -->
       <div class="container-fluid mt-4">
+        <?php if(isset($_GET['success'])): ?>
+          <div class="alert alert-success">
+            ลบเกมสำเร็จ
+          </div>
+        <?php endif; ?>
+
+        <?php if(isset($_GET['error'])): ?>
+          <div class="alert alert-danger">
+            เกิดข้อผิดพลาด
+          </div>
+        <?php endif; ?>
 
         <!-- Title -->
         <h1 class="h3 mb-4 font-weight-bold text-dark">

@@ -1,7 +1,7 @@
 <?php
 require_once "../config/db.php";
 
-$result = $conn->query("SELECT * FROM games");
+$result = $conn->query("SELECT * FROM games WHERE status='ON'");
 $games = [];
 
 if ($result->num_rows > 0) {
