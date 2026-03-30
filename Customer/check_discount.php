@@ -20,18 +20,22 @@ if($row = $result->fetch_assoc()){
 
   if($price >= $row['min_price']){
     $_SESSION['checkout']['discount_code'] = $code;
+
     echo json_encode([
       "success" => true,
       "amount" => $row['discount_amount']
     ]);
+
   }else{
     echo json_encode([
-      "success" => false
+      "success" => false,
+      "message" => "ยอดขั้นต่ำไม่ถึง (ขั้นต่ำ {$row['min_price']} บาท)"
     ]);
   }
 
 }else{
   echo json_encode([
-    "success" => false
+    "success" => false,
+    "message" => "โค้ดไม่ถูกต้อง หรือถูกใช้ไปแล้ว"
   ]);
 }

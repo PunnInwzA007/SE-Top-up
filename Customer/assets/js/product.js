@@ -75,7 +75,10 @@ packages.forEach(card=>{
 
 // ===== DISCOUNT =====
 applyBtn?.addEventListener("click",()=>{
-
+  if(discount > 0){
+    alert("คุณใช้โค้ดไปแล้ว");
+    return;
+  }
   const value = discountInput.value.trim();
 
   if(!value || selectedPrice <= 0){
@@ -86,12 +89,21 @@ applyBtn?.addEventListener("click",()=>{
     .then(res => res.json())
     .then(data => {
 
+      const errorBox = document.getElementById("discountError");
       if(data.success){
-        discount = parseInt(data.amount);
-      }else{
-        discount = 0;
-      }
+          discount = parseInt(data.amount);
 
+          if(errorBox){
+              errorBox.innerText = ""; // ลบ error
+          }
+
+      }else{
+          discount = 0;
+
+          if(errorBox){
+              errorBox.innerText = data.message; // 🔥 แสดงใต้ input
+          }
+      }
       updateTotal();
     });
 

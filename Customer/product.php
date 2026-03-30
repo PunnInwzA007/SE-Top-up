@@ -160,15 +160,15 @@ $packages = $conn->query($sql);
                     id="discountInput"
                     class="se-discount-input"
                     placeholder="กรอกโค้ดส่วนลด">
-
                 <button type="button"
                         id="applyDiscount"
                         class="se-btn-green se-discount-btn">
                 ใช้งาน
                 </button>
             </div>
+            <div id="discountError" style="color:red;font-size:14px;"></div>
             </div>
-
+              
           <!-- SUMMARY -->
           <div class="se-summary-box">
 
