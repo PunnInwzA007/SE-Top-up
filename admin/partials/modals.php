@@ -549,3 +549,48 @@
     </div>
   </div>
 </div>
+<!-- ADD GIFTCARD -->
+<div class="modal fade" id="addGiftcardModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <form action="add_giftcard.php" method="POST">
+
+        <div class="modal-header">
+          <h5 class="modal-title">Add Giftcard</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Reward</label>
+            <select name="reward_id" class="form-control">
+              <?php
+              $rs = $conn->query("SELECT id,name FROM rewards WHERE type='giftcard'");
+              while($r = $rs->fetch_assoc()):
+              ?>
+              <option value="<?= $r['id'] ?>">
+                <?= $r['name'] ?>
+              </option>
+              <?php endwhile; ?>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Codes</label>
+            <textarea name="codes" class="form-control" rows="5"
+              placeholder="1 code ต่อ 1 บรรทัด"></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary">Add</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

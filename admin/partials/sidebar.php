@@ -39,6 +39,9 @@
     <li class="nav-item <?= ($activePage=="rewards") ? "active" : "" ?>">
       <a class="nav-link" href="rewards.php">Rewards</a>
     </li>
+    <li class="nav-item <?= ($activePage=="giftcards") ? "active" : "" ?>">
+      <a class="nav-link" href="giftcards.php">Giftcards</a>
+    </li>
     <!-- Logout Trigger -->
     <li class="nav-item">
       <a class="nav-link"
