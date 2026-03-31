@@ -91,6 +91,14 @@
                  name="name"
                  id="editGameName"
                  required>
+                 
+          <label>Category</label>
+          <select name="category" id="editGameCategory" class="form-control mb-3">
+            <option value="mobile">Mobile</option>
+            <option value="pc">PC</option>
+            <option value="gift">Gift</option>
+            <option value="sub">Subscription</option>
+          </select>
 
           <label>Status</label>
           <select name="status"
@@ -188,7 +196,15 @@
                  name="name"
                  class="form-control mb-3"
                  required>
-
+            
+          <label>Category</label>
+          <select name="category" class="form-control mb-3">
+            <option value="mobile">Mobile</option>
+            <option value="pc">PC</option>
+            <option value="gift">Gift</option>
+            <option value="sub">Subscription</option>
+          </select>
+          
           <label>Status</label>
           <select name="status"
                   class="form-control mb-3">
@@ -299,7 +315,7 @@
           <!-- Price -->
           <div class="form-group">
             <label>Price</label>
-            <input type="number" step="0.01" name="price" class="form-control" required>
+            <input type="number" name="price" class="form-control" min="0" step="0.01" required placeholder="0.00">
           </div>
 
           <!-- Status -->
@@ -461,7 +477,7 @@
           </div>
           <div class="form-group">
             <label>Point Cost</label>
-            <input type="number" name="point_cost" class="form-control" required>
+            <input type="number" name="price" id="editPrice" class="form-control" min="0" step="0.01" required>
           </div>
           <div class="form-group">
             <label>Amount</label>

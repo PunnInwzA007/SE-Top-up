@@ -38,7 +38,7 @@ $user_display_id = "s" . str_pad($user['id'],9,"0",STR_PAD_LEFT);
         <div class="se-card p-4 mb-4 text-center">
 
         <div class="se-profile-avatar mb-3">
-            <div class="se-ph se-ph-square" style="width:120px;margin:auto;"></div>
+            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=<?= $user['username'] ?>" class="se-ph se-ph-square" style="width:120px;margin:auto;">
         </div>
 
         <h4 style="font-weight:900;">
@@ -74,8 +74,10 @@ $user_display_id = "s" . str_pad($user['id'],9,"0",STR_PAD_LEFT);
                     readonly>
             </div>
 
-            <button class="se-btn-green w-100">
-            Edit Personal Info
+            <button class="se-btn-green w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#editPersonalModal">
+                Edit Personal Info
             </button>
 
         </div>
@@ -102,8 +104,10 @@ $user_display_id = "s" . str_pad($user['id'],9,"0",STR_PAD_LEFT);
                     readonly>
             </div>
 
-            <button class="se-btn-green w-100">
-            Edit Contact Info
+            <button class="se-btn-green w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#editContactModal">
+                Edit Contact Info
             </button>
 
         </div>
@@ -139,7 +143,9 @@ $user_display_id = "s" . str_pad($user['id'],9,"0",STR_PAD_LEFT);
 
             <h5 class="mb-3" style="font-weight:800;">Security</h5>
 
-            <button class="se-btn-red w-100">
+            <button class="se-btn-red w-100"
+            data-bs-toggle="modal"
+            data-bs-target="#changePasswordModal">
             Change Password
             </button>
 

@@ -2,7 +2,7 @@
 session_start();
 require_once "../config/db.php";
 
-$error = "";
+$errors = [];
 $success = "";
 
 /* ================= LOGIN ================= */
@@ -63,8 +63,12 @@ $phone     = isset($_POST['phone']) ? trim($_POST['phone']) : '';
 if(empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($phone)){
     $error = "กรุณากรอกข้อมูลให้ครบ";
 }
-elseif($password !== $confirm){
-    $error = "รหัสผ่านไม่ตรงกัน";
+if($password !== $confirm){
+    $errors['confirm_password'] = "รหัสผ่านไม่ตรงกัน";
+}
+
+if(!preg_match('/^[0-9]{10}$/', $phone)){
+    $errors['phone'] = "เบอร์โทรต้องเป็นตัวเลข 10 หลัก";
 }
 else{
 
@@ -75,7 +79,7 @@ else{
     $result = $stmt->get_result();
 
     if($result->num_rows > 0){
-        $error = "Username นี้ถูกใช้แล้ว";
+    $errors['reg_username'] = "Username นี้ถูกใช้แล้ว";
     }else{
 
         $status = 'active';
@@ -97,7 +101,7 @@ else{
         $status
         );
 
-        if($stmt->execute()){
+        if(empty($errors) && $stmt->execute()){
             $success = "สมัครสำเร็จ กรุณา login";
         }else{
             $error = "เกิดข้อผิดพลาด";
@@ -121,10 +125,6 @@ else{
 
 <section class="se-section">
     <div class="se-container">
-
-        <?php if($error): ?>
-            <div class="alert alert-danger mb-4"><?= $error ?></div>
-        <?php endif; ?>
 
         <?php if($success): ?>
             <div class="alert alert-success mb-4"><?= $success ?></div>
@@ -185,57 +185,56 @@ else{
 
             <form method="POST">
 
-                <input
-                type="text"
-                name="reg_username"
-                class="form-control mb-3"
-                placeholder="Username"
-                required
-                >
-                <input
-                type="text"
-                name="firstname"
-                class="form-control mb-3"
-                placeholder="First Name"
-                required
-                >
+                <input type="text" name="reg_username"
+                class="form-control mb-3 <?= isset($errors['reg_username']) ? 'is-invalid' : '' ?>"
+                value="<?= htmlspecialchars($_POST['reg_username'] ?? '') ?>" placeholder="Username">
+                <?php if(isset($errors['reg_username'])): ?>
+                <div class="text-danger"><?= $errors['reg_username'] ?></div>
+                <?php endif; ?>
 
-                <input
-                type="text"
-                name="lastname"
-                class="form-control mb-3"
-                placeholder="Last Name"
-                required
-                >
-                <input
-                type="email"
-                name="email"
-                class="form-control mb-3"
-                placeholder="E-Mail Address"
-                required
-                >
+                <input type="text" name="firstname"
+                class="form-control mb-3 <?= isset($errors['firstname']) ? 'is-invalid' : '' ?>"
+                value="<?= htmlspecialchars($_POST['firstname'] ?? '') ?>" placeholder="First Name">
+                <?php if(isset($errors['firstname'])): ?>
+                <div class="text-danger"><?= $errors['firstname'] ?></div>
+                <?php endif; ?>
 
-                <input
-                type="password"
-                name="reg_password"
-                class="form-control mb-3"
-                placeholder="Password"
-                required
-                >
-                <input
-                type="password"
-                name="confirm_password"
-                class="form-control mb-3"
-                placeholder="Confirm Password"
-                required
-                >
-                <input
-                type="text"
-                name="phone"
-                class="form-control mb-4"
-                placeholder="Phone"
-                required
-                >
+                <input type="text" name="lastname"
+                class="form-control mb-3 <?= isset($errors['lastname']) ? 'is-invalid' : '' ?>"
+                value="<?= htmlspecialchars($_POST['lastname'] ?? '') ?>" placeholder="Last Name">
+                <?php if(isset($errors['lastname'])): ?>
+                <div class="text-danger"><?= $errors['lastname'] ?></div>
+                <?php endif; ?>
+
+                <input type="email" name="email"
+                class="form-control mb-3 <?= isset($errors['email']) ? 'is-invalid' : '' ?>"
+                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" placeholder="E-Mail Address">
+                <?php if(isset($errors['email'])): ?>
+                <div class="text-danger"><?= $errors['email'] ?></div>
+                <?php endif; ?>
+
+                <input type="password" name="reg_password"
+                class="form-control mb-3 <?= isset($errors['reg_password']) ? 'is-invalid' : '' ?>"
+                placeholder="Password">
+                <?php if(isset($errors['reg_password'])): ?>
+                <div class="text-danger"><?= $errors['reg_password'] ?></div>
+                <?php endif; ?>
+
+                <input type="password" name="confirm_password"
+                class="form-control mb-3 <?= isset($errors['confirm_password']) ? 'is-invalid' : '' ?>"
+                placeholder="Confirm Password">
+                <?php if(isset($errors['confirm_password'])): ?>
+                <div class="text-danger"><?= $errors['confirm_password'] ?></div>
+                <?php endif; ?>
+
+                <input type="text" name="phone"
+                class="form-control mb-3 <?= isset($errors['phone']) ? 'is-invalid' : '' ?>"
+                value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>"
+                placeholder="Phone" maxlength="10"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                <?php if(isset($errors['phone'])): ?>
+                <div class="text-danger"><?= $errors['phone'] ?></div>
+                <?php endif; ?>
                 
                 <button
                 name="register"

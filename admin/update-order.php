@@ -43,12 +43,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt = $conn->prepare("UPDATE users SET balance = balance + ? WHERE id=?");
                 $stmt->bind_param("di", $price, $userId);
                 $stmt->execute();
+                // ✅ หัก point (ตามราคาที่ซื้อ)
+                $stmt = $conn->prepare("
+                    UPDATE users 
+                    SET points = GREATEST(points - ?, 0)
+                    WHERE id=?
+                ");
 
+                $pointToRemove = intval($price / 10);
+                $stmt->bind_param("ii", $pointToRemove, $userId);
+                $stmt->execute();
                 // ✅ บันทึก transaction (refund)
                 $stmt = $conn->prepare("
                     INSERT INTO transactions (user_id, type, amount, order_id)
                     VALUES (?, 'refund', ?, ?)
                 ");
+
                 $stmt->bind_param("idi", $userId, $price, $id);
                 $stmt->execute();
 
