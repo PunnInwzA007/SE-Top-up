@@ -1,8 +1,9 @@
-<?php require_once "auth.php"; ?>
-<?php require_once "../config/db.php"; ?>
-<?php include "partials/header.php"; ?>
-
 <?php
+// 🔥 ห้ามมี space / บรรทัดว่างก่อนนี้เด็ดขาด
+
+require_once "auth.php";
+require_once "../config/db.php";
+
 $user_id = $_SESSION['user_id'];
 $message = "";
 
@@ -17,19 +18,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $message = "ขั้นต่ำ 10 บาท";
     } else {
 
-        // 💳 เพิ่มเงิน (mock ก่อน)
-        $stmt = $conn->prepare("UPDATE users SET balance = balance + ? WHERE id=?");
-        $stmt->bind_param("di", $amount, $user_id);
-        $stmt->execute();
-
-        // 🧾 บันทึก transaction
-        $stmt = $conn->prepare("INSERT INTO transactions (user_id, type, amount) VALUES (?, 'topup', ?)");
-        $stmt->bind_param("id", $user_id, $amount);
-        $stmt->execute();
-
-        $message = "เติมเงินสำเร็จ +{$amount} บาท";
+        header("Location: ../payment/create_charge.php?amount=".$amount);
+        exit;
     }
 }
+
+include "partials/header.php";
 ?>
 
 <section class="se-section">
@@ -57,8 +51,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             <label class="form-label">ช่องทางการชำระเงิน</label>
             <select class="form-select mb-4">
               <option>PromptPay</option>
-              <option>TrueMoney</option>
-              <option>Wallet</option>
             </select>
 
             <button class="se-btn-green w-100">

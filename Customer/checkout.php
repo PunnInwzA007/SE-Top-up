@@ -17,6 +17,7 @@ if(isset($_POST['discount'])){
 if($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['confirm'])){
     $_SESSION['checkout']['package_id'] = $_POST['package_id'];
     $_SESSION['checkout']['uid'] = $_POST['uid'];
+    $_SESSION['checkout']['payment_method'] = $_POST['payment_method'];
 }
 
 $package_id = $_POST['package_id'] ?? ($_SESSION['checkout']['package_id'] ?? null);
@@ -60,6 +61,8 @@ $balance = $user['balance'];
     CONFIRM PURCHASE
 ====================== */
 if(isset($_POST['confirm'])){
+  $method = $_SESSION['checkout']['payment_method'] ?? 'wallet';
+  if($method === 'wallet'){
     if($balance < $total_price){
         $error = "⚠️ เงินของคุณไม่เพียงพอ";
     } else {
@@ -126,6 +129,15 @@ if(isset($_POST['confirm'])){
             $error = "เกิดข้อผิดพลาด: " . $e->getMessage();
         }
     }
+  } elseif($method === 'promptpay'){
+
+    // 🔥 เก็บ session ไว้ให้ check_status ใช้
+    $_SESSION['checkout']['uid'] = $uid;
+
+    // 👉 ไป QR
+    header("Location: ../payment/create_charge.php?package_id=".$package_id);
+    exit;
+}
 }
 // 🔥 mark code used
 if(isset($_SESSION['checkout']['redeem_code'])){

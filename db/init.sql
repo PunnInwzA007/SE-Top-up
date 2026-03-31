@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 30, 2026 at 04:52 PM
+-- Generation Time: Mar 31, 2026 at 05:39 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -312,7 +312,11 @@ INSERT INTO `orders` (`id`, `user_id`, `package_id`, `game_uid`, `status`, `crea
 (119, 11, 4, 'PunnNAJA#fyck', 'cancel', '2026-03-30 15:23:20', 0.00, 'PUBG Mobile', '325 UC'),
 (120, 11, 3, 'PunnNAJA#fyck', 'success', '2026-03-30 15:27:15', 0.00, 'Free Fire', '100 Diamonds'),
 (121, 11, 3, 'PunnNAJA#fyck', 'success', '2026-03-30 15:32:30', 0.00, 'Free Fire', '100 Diamonds'),
-(122, 11, 3, 'kuyrai#sus', 'success', '2026-03-30 15:34:24', 0.00, 'Free Fire', '100 Diamonds');
+(122, 11, 3, 'kuyrai#sus', 'success', '2026-03-30 15:34:24', 0.00, 'Free Fire', '100 Diamonds'),
+(123, 13, 2, 'PunnNAJA#fyck', 'success', '2026-03-31 05:25:07', 149.00, 'ROV', '300 UC'),
+(124, 13, 14, 'PunnNAJA#fyck', 'success', '2026-03-31 05:33:52', 300.00, 'Valorant', '1000 VP'),
+(125, 13, 13, 'PunnNAJA#fyck', 'success', '2026-03-31 05:34:57', 150.00, 'Valorant', '475 VP'),
+(126, 13, 15, 'PunnNAJA#fyck', 'success', '2026-03-31 05:37:00', 600.00, 'Valorant', '2050 VP');
 
 -- --------------------------------------------------------
 
@@ -365,6 +369,41 @@ INSERT INTO `packages` (`id`, `game_id`, `name`, `price`, `status`, `created_at`
 (34, 108, '300 Bonds', 150.00, 'ON', '2026-03-29 07:29:26'),
 (35, 109, '100 FC Points', 35.00, 'ON', '2026-03-29 07:29:26'),
 (36, 109, '500 FC Points', 150.00, 'ON', '2026-03-29 07:29:26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `charge_id` varchar(100) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `type` enum('wallet','package') NOT NULL,
+  `status` enum('pending','successful','failed') DEFAULT 'pending',
+  `package_id` int DEFAULT NULL,
+  `order_id` int DEFAULT NULL,
+  `metadata` json DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`id`, `user_id`, `charge_id`, `amount`, `type`, `status`, `package_id`, `order_id`, `metadata`, `created_at`) VALUES
+(1, 13, 'chrg_test_6773o6v28mi2e6pnsfp', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:34:56'),
+(2, 13, 'chrg_test_6773osn2s6sh0aty5j1', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:36:39'),
+(3, 13, 'chrg_test_6773owzjb86w6fj81y6', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:36:59'),
+(4, 13, 'chrg_test_6773qmtuwf5f2isppmj', 50.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:41:52'),
+(5, 13, 'chrg_test_6773t4stken6087mgws', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:48:58'),
+(6, 13, 'chrg_test_6773u9uzge1aolexhmb', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:52:12'),
+(7, 13, 'chrg_test_67745rl5jc7idr3mem7', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 05:24:51'),
+(8, 13, 'chrg_test_67748kh64krfnkazlwk', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 05:32:49'),
+(9, 13, 'chrg_test_67748vfkgoc0mi8gi0u', 300.00, 'package', 'successful', 14, NULL, NULL, '2026-03-31 05:33:41'),
+(10, 13, 'chrg_test_67749xkltm7f4c47273', 600.00, 'package', 'successful', 15, NULL, NULL, '2026-03-31 05:36:41');
 
 -- --------------------------------------------------------
 
@@ -496,7 +535,16 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `order_id`, `crea
 (119, 11, 'refund', 0.00, 118, '2026-03-30 15:20:44'),
 (120, 11, 'purchase', 0.00, 119, '2026-03-30 15:23:20'),
 (121, 11, 'refund', 0.00, 119, '2026-03-30 15:23:43'),
-(122, 11, 'purchase', 0.00, 120, '2026-03-30 15:27:15');
+(122, 11, 'purchase', 0.00, 120, '2026-03-30 15:27:15'),
+(123, 13, 'topup', 20.00, NULL, '2026-03-31 04:37:24'),
+(124, 13, 'topup', 50.00, NULL, '2026-03-31 04:42:14'),
+(125, 13, 'topup', 20.00, NULL, '2026-03-31 04:49:26'),
+(126, 13, 'topup', 30.00, NULL, '2026-03-31 04:52:29'),
+(127, 13, 'purchase', -149.00, 123, '2026-03-31 05:25:07'),
+(128, 13, 'topup', 30.00, NULL, '2026-03-31 05:32:59'),
+(129, 13, 'purchase', -300.00, 124, '2026-03-31 05:33:52'),
+(130, 13, 'purchase', -150.00, 125, '2026-03-31 05:34:57'),
+(131, 13, 'purchase', -600.00, 126, '2026-03-31 05:37:00');
 
 -- --------------------------------------------------------
 
@@ -534,7 +582,7 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (10, 'iamveryhandsomeS', 'ปัญญวัฒน์', 'ฟักทิม', '1234', 'panyawatfaktim@gmail.com', '0861454050', 0.00, '2026-03-30 05:57:13', 0, 'banned'),
 (11, 'PanyaOn', 'notpanyawat', 'alsonotfaktim', '$2y$10$FKImaCnZJ.9JewvuhbvSpOP2fEBZBfZiTOJXJc7ZeZknQyOJD3l8K', 'notpanyawatfaktim@gmail.com', '0984606569', 88900.00, '2026-03-30 10:24:24', 8050, 'active'),
 (12, 's', 's', 's', '$2y$10$EedkarYf28LN.L4v7hNQ4ulCGIlHPooBDHtVIiPWbC7z6bfnZw8oG', 'panyawatfaktim@gmail.com', '09846', 0.00, '2026-03-30 14:55:15', 0, 'active'),
-(13, 'notpunnforsure', 'someone', 'thatnotpunn', '$2y$10$nAbN78GW6HJlVeUbeI25iOZThR16OYfPQDT1k/ao8JIfk7MjDBZDq', 'panyawatfak@gmail.com', '0861454050', 0.00, '2026-03-30 16:38:54', 0, 'active');
+(13, 'notpunnforsure', 'someone', 'thatnotpunn', '$2y$10$nAbN78GW6HJlVeUbeI25iOZThR16OYfPQDT1k/ao8JIfk7MjDBZDq', 'panyawatfak@gmail.com', '0861454050', 0.00, '2026-03-30 16:38:54', 15, 'active');
 
 -- --------------------------------------------------------
 
@@ -636,6 +684,14 @@ ALTER TABLE `packages`
   ADD KEY `packages_ibfk_1` (`game_id`);
 
 --
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `charge_id` (`charge_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `rewards`
 --
 ALTER TABLE `rewards`
@@ -709,13 +765,19 @@ ALTER TABLE `giftcard_stock`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `packages`
 --
 ALTER TABLE `packages`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `rewards`
@@ -727,7 +789,7 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -777,6 +839,12 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `packages`
   ADD CONSTRAINT `packages_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `games` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `rewards`

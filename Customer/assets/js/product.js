@@ -137,6 +137,7 @@ continueBtn?.addEventListener("click",()=>{
   <input type="hidden" name="package_id" value="${selectedPackageId}">
   <input type="hidden" name="uid" value="${uid}">
   <input type="hidden" name="discount" value="${discount}"> 
+  <input type="hidden" name="payment_method" value="${selectedPayment}">
   `;
 
   document.body.appendChild(form);
