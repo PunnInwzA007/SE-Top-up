@@ -18,6 +18,7 @@ orders.price,
 orders.package_name,
 orders.game_name
 FROM orders
+JOIN games ON games.name = orders.game_name
 WHERE orders.user_id = $user_id
 ";
 if(!empty($search)){
@@ -33,8 +34,8 @@ OR orders.id LIKE '%$search%'
 )";
 }
 if($category != "all"){
-$category = (int)$category;
-$sql .= " AND games.id = $category";
+  $category = (int)$category;
+  $sql .= " AND games.id = $category";
 }
 switch($sort){
 
