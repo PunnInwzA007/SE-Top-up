@@ -78,9 +78,10 @@ Notes:
 - If you deploy, secure the `config` files and use environment variables for secrets.
 
 ---
-If you'd like, I can:
-- Add environment-based configuration (read Omise keys / DB creds from env)
-- Add a short Docker dev guide or healthcheck endpoints
-- Harden the login/password handling and provide a small script to create test users
+## สมาชิกกลุ่ม
 
-PRs welcome.
+6704062612073	      ชนกนันท์ ศิริธรรม
+6704062612162	      ปัญญวัฒน์ ฟักทิม
+6704062612201	      ณปภัช วีรคปุต์
+6704062612189	      ชิษณุชา มโนวรกุล
+6704062612154	      ชลันธร โคตะดี
