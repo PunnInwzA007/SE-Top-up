@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 31, 2026 at 05:39 AM
+-- Generation Time: Mar 31, 2026 at 10:18 AM
 -- Server version: 8.4.8
 -- PHP Version: 8.3.30
 
@@ -103,7 +103,7 @@ CREATE TABLE `discount_codes` (
 --
 
 INSERT INTO `discount_codes` (`id`, `code`, `discount_amount`, `min_price`, `usage_limit`, `used_count`, `status`, `created_at`) VALUES
-(1, 'SE20', 20.00, 50.00, 100, 4, 'ACTIVE', '2026-03-27 08:53:39'),
+(1, 'SE20', 20.00, 50.00, 100, 8, 'ACTIVE', '2026-03-27 08:53:39'),
 (2, 'WELCOME50', 50.00, 200.00, 50, 0, 'ACTIVE', '2026-03-27 08:53:39'),
 (3, 'PUNN10', 10.00, 0.00, 999, 0, 'ACTIVE', '2026-03-27 08:53:39'),
 (4, 'FLASH100', 100.00, 500.00, 10, 0, 'ACTIVE', '2026-03-27 08:53:39'),
@@ -200,7 +200,8 @@ INSERT INTO `game_uids` (`id`, `user_id`, `game_id`, `uid`, `created_at`) VALUES
 (16, 5, 101, 'D0esnotex1st#fyck', '2026-03-29 10:15:00'),
 (17, 5, 101, 'd0esnotex1st#fyck', '2026-03-29 10:15:05'),
 (18, 5, 2, 'PunnNAJA#fyck', '2026-03-30 00:25:12'),
-(19, 11, 100, 'PunnNAJA#fyck', '2026-03-30 15:05:52');
+(19, 11, 100, 'PunnNAJA#fyck', '2026-03-30 15:05:52'),
+(20, 13, 1, 'PunnNAJA#fyck', '2026-03-31 06:55:00');
 
 -- --------------------------------------------------------
 
@@ -316,7 +317,16 @@ INSERT INTO `orders` (`id`, `user_id`, `package_id`, `game_uid`, `status`, `crea
 (123, 13, 2, 'PunnNAJA#fyck', 'success', '2026-03-31 05:25:07', 149.00, 'ROV', '300 UC'),
 (124, 13, 14, 'PunnNAJA#fyck', 'success', '2026-03-31 05:33:52', 300.00, 'Valorant', '1000 VP'),
 (125, 13, 13, 'PunnNAJA#fyck', 'success', '2026-03-31 05:34:57', 150.00, 'Valorant', '475 VP'),
-(126, 13, 15, 'PunnNAJA#fyck', 'success', '2026-03-31 05:37:00', 600.00, 'Valorant', '2050 VP');
+(126, 13, 15, 'PunnNAJA#fyck', 'success', '2026-03-31 05:37:00', 600.00, 'Valorant', '2050 VP'),
+(127, 13, 2, 'PunnNAJA#fyck', 'success', '2026-03-31 06:56:34', 149.00, 'ROV', '300 UC'),
+(128, 13, 2, 'PunnNAJA#fyck', 'pending', '2026-03-31 06:57:44', 149.00, 'ROV', '300 UC'),
+(129, 13, 2, 'PunnNAJA#fyck', 'pending', '2026-03-31 09:18:35', 149.00, 'ROV', '300 UC'),
+(130, 13, 2, 'punnpunnlovefreefire', 'pending', '2026-03-31 09:31:52', 129.00, 'ROV', '300 UC'),
+(131, 13, 9, 'PunnNAJA#fyck', 'pending', '2026-03-31 09:32:51', 129.00, 'Genshin Impact', '300 Genesis Crystals'),
+(132, 13, 13, 'PunnNAJA#fyck', 'pending', '2026-03-31 09:37:03', 130.00, 'Valorant', '475 VP'),
+(133, 13, 2, 'PunnNAJA#fyck', 'pending', '2026-03-31 09:56:25', 129.00, 'ROV', '300 UC'),
+(134, 13, 1, 'PunnNAJA#fyck', 'pending', '2026-03-31 10:10:18', 30.00, 'ROV', '60 UC'),
+(135, 13, 13, 'PunnNAJA#fyck', 'pending', '2026-03-31 10:13:22', 150.00, 'Valorant', '475 VP');
 
 -- --------------------------------------------------------
 
@@ -386,24 +396,39 @@ CREATE TABLE `payments` (
   `package_id` int DEFAULT NULL,
   `order_id` int DEFAULT NULL,
   `metadata` json DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `discount_code` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`id`, `user_id`, `charge_id`, `amount`, `type`, `status`, `package_id`, `order_id`, `metadata`, `created_at`) VALUES
-(1, 13, 'chrg_test_6773o6v28mi2e6pnsfp', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:34:56'),
-(2, 13, 'chrg_test_6773osn2s6sh0aty5j1', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:36:39'),
-(3, 13, 'chrg_test_6773owzjb86w6fj81y6', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:36:59'),
-(4, 13, 'chrg_test_6773qmtuwf5f2isppmj', 50.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:41:52'),
-(5, 13, 'chrg_test_6773t4stken6087mgws', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:48:58'),
-(6, 13, 'chrg_test_6773u9uzge1aolexhmb', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:52:12'),
-(7, 13, 'chrg_test_67745rl5jc7idr3mem7', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 05:24:51'),
-(8, 13, 'chrg_test_67748kh64krfnkazlwk', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 05:32:49'),
-(9, 13, 'chrg_test_67748vfkgoc0mi8gi0u', 300.00, 'package', 'successful', 14, NULL, NULL, '2026-03-31 05:33:41'),
-(10, 13, 'chrg_test_67749xkltm7f4c47273', 600.00, 'package', 'successful', 15, NULL, NULL, '2026-03-31 05:36:41');
+INSERT INTO `payments` (`id`, `user_id`, `charge_id`, `amount`, `type`, `status`, `package_id`, `order_id`, `metadata`, `created_at`, `discount_code`) VALUES
+(1, 13, 'chrg_test_6773o6v28mi2e6pnsfp', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:34:56', NULL),
+(2, 13, 'chrg_test_6773osn2s6sh0aty5j1', 20.00, 'wallet', 'pending', NULL, NULL, NULL, '2026-03-31 04:36:39', NULL),
+(3, 13, 'chrg_test_6773owzjb86w6fj81y6', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:36:59', NULL),
+(4, 13, 'chrg_test_6773qmtuwf5f2isppmj', 50.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:41:52', NULL),
+(5, 13, 'chrg_test_6773t4stken6087mgws', 20.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:48:58', NULL),
+(6, 13, 'chrg_test_6773u9uzge1aolexhmb', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 04:52:12', NULL),
+(7, 13, 'chrg_test_67745rl5jc7idr3mem7', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 05:24:51', NULL),
+(8, 13, 'chrg_test_67748kh64krfnkazlwk', 30.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 05:32:49', NULL),
+(9, 13, 'chrg_test_67748vfkgoc0mi8gi0u', 300.00, 'package', 'successful', 14, NULL, NULL, '2026-03-31 05:33:41', NULL),
+(10, 13, 'chrg_test_67749xkltm7f4c47273', 600.00, 'package', 'successful', 15, NULL, NULL, '2026-03-31 05:36:41', NULL),
+(11, 13, 'chrg_test_67751kuq34q1jyzl6uc', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 06:55:14', NULL),
+(12, 13, 'chrg_test_67752c6m813f6x6tjng', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 06:57:23', NULL),
+(13, 13, 'chrg_test_67752mosp65q7u71egu', 50.00, 'wallet', 'successful', NULL, NULL, NULL, '2026-03-31 06:58:13', NULL),
+(14, 13, 'chrg_test_6776fyx9xdiq1hp004z', 149.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 09:18:22', NULL),
+(15, 13, 'chrg_test_6776idq2swxv69dzgg6', 129.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 09:25:13', NULL),
+(16, 13, 'chrg_test_6776kzzrsr8iiwcv55v', 129.00, 'package', 'successful', 9, NULL, NULL, '2026-03-31 09:32:40', NULL),
+(17, 13, 'chrg_test_6776mhurezwg3otvs0c', 130.00, 'package', 'successful', 13, NULL, NULL, '2026-03-31 09:36:55', 'SE20'),
+(18, 13, 'chrg_test_6776taswfv23z9uvwk1', 129.00, 'package', 'successful', 2, NULL, NULL, '2026-03-31 09:56:14', 'SE20'),
+(19, 13, 'chrg_test_6776v73pbfvrm0hglc5', 30.00, 'package', 'pending', 1, NULL, NULL, '2026-03-31 10:01:38', 'SE20'),
+(20, 13, 'chrg_test_6776vlwhbxyood7j1ce', 30.00, 'package', 'pending', 1, NULL, NULL, '2026-03-31 10:02:48', 'SE20'),
+(21, 13, 'chrg_test_6776wdb8x0s748ozgm8', 30.00, 'package', 'pending', 1, NULL, NULL, '2026-03-31 10:04:58', 'SE20'),
+(22, 13, 'chrg_test_6776wvn3qj8leasylky', 30.00, 'package', 'pending', 1, NULL, NULL, '2026-03-31 10:06:24', 'SE20'),
+(23, 13, 'chrg_test_6776xvp3wmv0ogsanam', 30.00, 'package', 'successful', 1, NULL, NULL, '2026-03-31 10:09:15', 'SE20'),
+(24, 13, 'chrg_test_6776yefpgdryye3jp2i', 150.00, 'package', 'successful', 13, NULL, NULL, '2026-03-31 10:10:44', 'SE20');
 
 -- --------------------------------------------------------
 
@@ -544,7 +569,17 @@ INSERT INTO `transactions` (`id`, `user_id`, `type`, `amount`, `order_id`, `crea
 (128, 13, 'topup', 30.00, NULL, '2026-03-31 05:32:59'),
 (129, 13, 'purchase', -300.00, 124, '2026-03-31 05:33:52'),
 (130, 13, 'purchase', -150.00, 125, '2026-03-31 05:34:57'),
-(131, 13, 'purchase', -600.00, 126, '2026-03-31 05:37:00');
+(131, 13, 'purchase', -600.00, 126, '2026-03-31 05:37:00'),
+(132, 13, 'purchase', -149.00, 127, '2026-03-31 06:56:34'),
+(133, 13, 'purchase', -149.00, 128, '2026-03-31 06:57:44'),
+(134, 13, 'topup', 50.00, NULL, '2026-03-31 06:58:23'),
+(135, 13, 'purchase', -149.00, 129, '2026-03-31 09:18:35'),
+(137, 13, 'purchase', -129.00, 130, '2026-03-31 09:31:52'),
+(138, 13, 'purchase', -129.00, 131, '2026-03-31 09:32:51'),
+(139, 13, 'purchase', -130.00, 132, '2026-03-31 09:37:03'),
+(140, 13, 'purchase', -129.00, 133, '2026-03-31 09:56:25'),
+(141, 13, 'purchase', -30.00, 134, '2026-03-31 10:10:18'),
+(142, 13, 'purchase', -150.00, 135, '2026-03-31 10:13:22');
 
 -- --------------------------------------------------------
 
@@ -582,7 +617,7 @@ INSERT INTO `users` (`id`, `username`, `firstname`, `lastname`, `password`, `ema
 (10, 'iamveryhandsomeS', 'ปัญญวัฒน์', 'ฟักทิม', '1234', 'panyawatfaktim@gmail.com', '0861454050', 0.00, '2026-03-30 05:57:13', 0, 'banned'),
 (11, 'PanyaOn', 'notpanyawat', 'alsonotfaktim', '$2y$10$FKImaCnZJ.9JewvuhbvSpOP2fEBZBfZiTOJXJc7ZeZknQyOJD3l8K', 'notpanyawatfaktim@gmail.com', '0984606569', 88900.00, '2026-03-30 10:24:24', 8050, 'active'),
 (12, 's', 's', 's', '$2y$10$EedkarYf28LN.L4v7hNQ4ulCGIlHPooBDHtVIiPWbC7z6bfnZw8oG', 'panyawatfaktim@gmail.com', '09846', 0.00, '2026-03-30 14:55:15', 0, 'active'),
-(13, 'notpunnforsure', 'someone', 'thatnotpunn', '$2y$10$nAbN78GW6HJlVeUbeI25iOZThR16OYfPQDT1k/ao8JIfk7MjDBZDq', 'panyawatfak@gmail.com', '0861454050', 0.00, '2026-03-30 16:38:54', 15, 'active');
+(13, 'notpunnforsure', 'someone', 'thatnotpunn', '$2y$10$nAbN78GW6HJlVeUbeI25iOZThR16OYfPQDT1k/ao8JIfk7MjDBZDq', 'panyawatfak@gmail.com', '0861454050', 50.00, '2026-03-30 16:38:54', 15, 'active');
 
 -- --------------------------------------------------------
 
@@ -747,13 +782,13 @@ ALTER TABLE `discount_codes`
 -- AUTO_INCREMENT for table `games`
 --
 ALTER TABLE `games`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
 
 --
 -- AUTO_INCREMENT for table `game_uids`
 --
 ALTER TABLE `game_uids`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `giftcard_stock`
@@ -765,7 +800,7 @@ ALTER TABLE `giftcard_stock`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `packages`
@@ -777,7 +812,7 @@ ALTER TABLE `packages`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `rewards`
@@ -789,13 +824,13 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=143;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `user_rewards`

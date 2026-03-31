@@ -51,6 +51,10 @@
     <li class="nav-item <?= ($activePage=="users") ? "active" : "" ?>">
       <a class="nav-link" href="users.php">Users</a>
     </li>
+    <li class="nav-item <?= ($activePage=="payments") ? "active" : "" ?>">
+      <a class="nav-link" href="payments.php">Payments</a>
+    </li>
+
     <!-- Logout Trigger -->
     <li class="nav-item">
       <a class="nav-link"

@@ -106,13 +106,6 @@ $packages = $conn->query($sql);
                 </div>
 
                 <div class="col-6 col-lg-4">
-                    <div class="se-payment-card" data-payment="truemoney">
-                    <div class="se-payment-logo"><img src="../admin/uploads/truemoney.jpg" alt="TrueMoney"></div>
-                    <div class="se-payment-name">TrueMoney</div>
-                    </div>
-                </div>
-
-                <div class="col-6 col-lg-4">
                     <div class="se-payment-card" data-payment="wallet">
                     <div class="se-payment-logo"><img src="../admin/uploads/wallet.jpg" alt="Wallet"></div>
                     <div class="se-payment-name">Wallet</div>
