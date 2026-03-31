@@ -153,12 +153,161 @@ if($charge['status'] === 'successful'){
 ========================= */
 $qr = $charge['source']['scannable_code']['image']['download_uri'];
 ?>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Payment Status</title>
 
-<h2>PromptPay QR</h2>
-<img src="<?= $qr ?>" width="300">
+<style>
+:root{
+  --se-blue:#0071f8;
+  --se-pink:#ee626b;
+  --se-gray:#f2f2f2;
+  --se-border:rgba(0,0,0,.10);
+  --se-shadow:0 10px 24px rgba(0,0,0,.08);
+}
 
-<p>Status: <?= $charge['status'] ?></p>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background: var(--se-gray);
+}
 
-<a href="check_status.php?id=<?= $charge_id ?>">
-    <button>เช็คสถานะ</button>
-</a>
+/* layout */
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+/* card */
+.card{
+  background:#fff;
+  padding:30px;
+  border-radius:20px;
+  width:360px;
+  text-align:center;
+  box-shadow: var(--se-shadow);
+  border:1px solid var(--se-border);
+}
+
+/* title */
+.title{
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+
+/* badge */
+.badge{
+  display:inline-block;
+  padding:10px 22px;
+  border-radius:30px;
+  font-weight:bold;
+  margin-bottom:20px;
+  color:#fff;
+}
+
+.success{ background:#22c55e; }
+.pending{ background:var(--se-blue); }
+.failed{ background:var(--se-pink); }
+
+/* text */
+.text{
+  margin-bottom:15px;
+}
+
+/* qr */
+.qr img{
+  width:200px;
+  border-radius:12px;
+  background:#fff;
+  padding:10px;
+  border:1px solid var(--se-border);
+  margin-bottom:20px;
+}
+
+/* button */
+.btn{
+  display:block;
+  padding:12px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+  margin-top:10px;
+  transition:0.2s;
+}
+
+.btn-blue{
+  background:var(--se-blue);
+  color:#fff;
+}
+
+.btn-pink{
+  background:var(--se-pink);
+  color:#fff;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow: var(--se-shadow);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <div class="title">สถานะการชำระเงิน</div>
+
+    <!-- STATUS -->
+    <?php if($charge['status'] === 'successful'): ?>
+      <div class="badge success">SUCCESS</div>
+    <?php elseif($charge['status'] === 'pending'): ?>
+      <div class="badge pending">PENDING</div>
+    <?php else: ?>
+      <div class="badge failed">FAILED</div>
+    <?php endif; ?>
+
+    <!-- TEXT -->
+    <?php if($charge['status'] === 'pending'): ?>
+      <div class="text">กรุณาสแกน QR เพื่อชำระเงิน</div>
+    <?php endif; ?>
+
+    <?php if($charge['status'] === 'successful'): ?>
+      <div class="text" style="color:#22c55e;font-weight:bold;">
+        ชำระเงินสำเร็จ 🎉
+      </div>
+    <?php endif; ?>
+
+    <?php if($charge['status'] === 'failed'): ?>
+      <div class="text" style="color:var(--se-pink);">
+        การชำระเงินล้มเหลว
+      </div>
+    <?php endif; ?>
+
+    <!-- QR -->
+    <?php if($charge['status'] === 'pending'): ?>
+      <div class="qr">
+        <img src="<?= $qr ?>">
+      </div>
+    <?php endif; ?>
+
+    <!-- BUTTON -->
+    <a href="check_status.php?id=<?= $charge_id ?>" class="btn btn-blue">
+      รีเฟรชสถานะ
+    </a>
+
+    <a href="../Customer/history.php" class="btn btn-pink">
+      กลับไปหน้า History
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
