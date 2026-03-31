@@ -7,7 +7,11 @@ $name    = $_POST['name'];
 $price   = $_POST['price'];
 $status  = $_POST['status'];
 
-if ($price < 0) { $price = 0; }
+$price = floatval($_POST['price']);
+
+if ($price < 0) {
+    die("price ห้ามติดลบ");
+}
 $sql = "UPDATE packages
         SET game_id='$game_id',
             name='$name',

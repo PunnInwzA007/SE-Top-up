@@ -110,8 +110,10 @@
 
           <label>Change Image</label>
           <input type="file"
-                 name="image"
-                 class="form-control">
+          name="image"
+          class="form-control"
+          accept="image/png, image/jpeg, image/jpg,"
+          required>
 
         </div>
 
@@ -216,6 +218,7 @@
           <input type="file"
                  name="image"
                  class="form-control"
+                 accept="image/png, image/jpeg, image/jpg,">
                  required>
 
         </div>
@@ -390,11 +393,13 @@
           <!-- Price -->
           <div class="form-group">
             <label>Price</label>
-            <input type="number"
-                   step="0.01"
-                   name="price"
-                   class="form-control"
-                   id="editPackagePrice">
+            <<input type="number"
+            step="0.01"
+            min="0"
+            name="price"
+            class="form-control"
+            id="editPackagePrice"
+            required>
           </div>
 
           <!-- Status -->
@@ -477,11 +482,11 @@
           </div>
           <div class="form-group">
             <label>Point Cost</label>
-            <input type="number" name="price" id="editPrice" class="form-control" min="0" step="0.01" required>
+            <input type="number" name="point_cost" class="form-control" min="0" required>
           </div>
           <div class="form-group">
             <label>Amount</label>
-            <input type="number" name="amount" class="form-control" placeholder="ใส่จำนวน เช่น 10">
+            <input type="number" name="amount" class="form-control" min="0" placeholder="ใส่จำนวน เช่น 10">
           </div>
         </div>
               
@@ -540,11 +545,11 @@
           </div>
           <div class="form-group">
             <label>Point Cost</label>
-            <input type="number" name="point_cost" class="form-control" required>
+            <input type="number" name="point_cost" class="form-control" min="0" required>
           </div>
           <div class="form-group">
             <label>Amount</label>
-            <input type="number" name="amount" id="editAmount" class="form-control">
+            <input type="number" name="amount" id="editAmount" class="form-control" min="0">
           </div>
         </div>
 

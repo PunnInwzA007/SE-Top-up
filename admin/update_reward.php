@@ -9,6 +9,16 @@ $package_id = $_POST['package_id'] !== '' ? $_POST['package_id'] : "NULL";
 $point_cost = $_POST['point_cost'];
 $amount = $_POST['amount'] !== '' ? $_POST['amount'] : "NULL";
 
+$point_cost = intval($_POST['point_cost']);
+$amount = $_POST['amount'] !== '' ? intval($_POST['amount']) : null;
+
+if ($point_cost < 0) {
+    die("point_cost ห้ามติดลบ");
+}
+
+if ($amount !== null && $amount < 0) {
+    die("amount ห้ามติดลบ");
+}
 $sql = "UPDATE rewards
         SET name='$name',
             type='$type',

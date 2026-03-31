@@ -6,7 +6,11 @@ $id     = $_POST["id"];
 $name   = $_POST["name"];
 $status = $_POST["status"];
 $category = $_POST["category"];
+$allowed = ['image/jpeg','image/png','image/jpg'];
 
+if (!in_array($_FILES["image"]["type"], $allowed)) {
+    die("อนุญาตเฉพาะ JPG, PNG, JPEG");
+}
 // ถ้ามีอัปโหลดรูปใหม่
 if(!empty($_FILES["image"]["name"])){
 
