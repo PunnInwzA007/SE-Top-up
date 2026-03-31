@@ -37,9 +37,7 @@ if(!$payment){
 if($charge['status'] === 'successful'){
 
     // ❗ กันซ้ำ
-    if($payment['status'] === 'successful'){
-        // ไม่ต้องทำอะไร
-    } else {
+    if($payment['status'] !== 'successful'){
 
         $conn->begin_transaction();
 
@@ -57,12 +55,14 @@ if($charge['status'] === 'successful'){
             ========================= */
             if($payment['type'] === 'wallet'){
 
+                // 💰 เพิ่มเงิน
                 $stmt = $conn->prepare("
                 UPDATE users SET balance = balance + ? WHERE id=?
                 ");
                 $stmt->bind_param("di", $payment['amount'], $payment['user_id']);
                 $stmt->execute();
 
+                // 📜 transaction
                 $stmt = $conn->prepare("
                 INSERT INTO transactions (user_id, type, amount)
                 VALUES (?, 'topup', ?)
@@ -80,6 +80,7 @@ if($charge['status'] === 'successful'){
                 $user_id = $payment['user_id'];
                 $price = $payment['amount'];
 
+                // 🔥 ดึง package + game
                 $stmt = $conn->prepare("
                     SELECT p.*, g.name AS game_name
                     FROM packages p
@@ -90,8 +91,14 @@ if($charge['status'] === 'successful'){
                 $stmt->execute();
                 $pkg = $stmt->get_result()->fetch_assoc();
 
+                if(!$pkg){
+                    throw new Exception("package not found");
+                }
+
+                // 🎮 UID
                 $uid = $_SESSION['checkout']['uid'] ?? 'UNKNOWN';
 
+                // ✅ CREATE ORDER (สำคัญมาก ห้ามหาย)
                 $stmt = $conn->prepare("
                     INSERT INTO orders (user_id, package_id, game_uid, price, status, game_name, package_name)
                     VALUES (?, ?, ?, ?, 'pending', ?, ?)
@@ -107,8 +114,9 @@ if($charge['status'] === 'successful'){
                 );
                 $stmt->execute();
 
-                $order_id = $conn->insert_id;
+                $order_id = $conn->insert_id; // 🔥 ได้จริงแล้ว
 
+                // 📜 transaction (ต้องมาหลัง order)
                 $stmt = $conn->prepare("
                 INSERT INTO transactions (user_id, type, amount, order_id)
                 VALUES (?, 'purchase', ?, ?)
@@ -116,6 +124,19 @@ if($charge['status'] === 'successful'){
                 $amount = -$price;
                 $stmt->bind_param("idi", $user_id, $amount, $order_id);
                 $stmt->execute();
+
+                // 🎟️ update discount
+                if($payment['discount_code']){
+                    $code = $payment['discount_code'];
+
+                    $stmt = $conn->prepare("
+                    UPDATE discount_codes 
+                    SET used_count = used_count + 1 
+                    WHERE code=? 
+                    ");
+                    $stmt->bind_param("s", $code);
+                    $stmt->execute();
+                }
             }
 
             $conn->commit();

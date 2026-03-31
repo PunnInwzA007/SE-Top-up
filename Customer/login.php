@@ -60,9 +60,15 @@ $phone     = isset($_POST['phone']) ? trim($_POST['phone']) : '';
 
 /* ===== VALIDATION ===== */
 
-if(empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($phone)){
-    $error = "กรุณากรอกข้อมูลให้ครบ";
-}
+/* ===== VALIDATION ===== */
+
+if(empty($username))  $errors['reg_username'] = "กรุณากรอก username";
+if(empty($firstname)) $errors['firstname'] = "กรุณากรอก firstname";
+if(empty($lastname))  $errors['lastname'] = "กรุณากรอก lastname";
+if(empty($email))     $errors['email'] = "กรุณากรอก email";
+if(empty($password))  $errors['password'] = "กรุณากรอก password";
+if(empty($phone))     $errors['phone'] = "กรุณากรอกเบอร์";
+
 if($password !== $confirm){
     $errors['confirm_password'] = "รหัสผ่านไม่ตรงกัน";
 }
@@ -70,7 +76,10 @@ if($password !== $confirm){
 if(!preg_match('/^[0-9]{10}$/', $phone)){
     $errors['phone'] = "เบอร์โทรต้องเป็นตัวเลข 10 หลัก";
 }
-else{
+
+
+/* ===== ถ้าไม่มี error ค่อย INSERT ===== */
+if(empty($errors)){
 
     // 🔍 เช็ค username ซ้ำ
     $stmt = $conn->prepare("SELECT id FROM users WHERE username=?");
@@ -79,29 +88,29 @@ else{
     $result = $stmt->get_result();
 
     if($result->num_rows > 0){
-    $errors['reg_username'] = "Username นี้ถูกใช้แล้ว";
+        $errors['reg_username'] = "Username นี้ถูกใช้แล้ว";
     }else{
 
         $status = 'active';
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        // 🔥 INSERT
+
         $stmt = $conn->prepare("
         INSERT INTO users (username, firstname, lastname, password, email, phone, status)
         VALUES (?,?,?,?,?,?,?)
         ");
 
         $stmt->bind_param(
-        "sssssss",
-        $username,
-        $firstname,
-        $lastname,
-        $hashed_password,
-        $email,
-        $phone,
-        $status
+            "sssssss",
+            $username,
+            $firstname,
+            $lastname,
+            $hashed_password,
+            $email,
+            $phone,
+            $status
         );
 
-        if(empty($errors) && $stmt->execute()){
+        if($stmt->execute()){
             $success = "สมัครสำเร็จ กรุณา login";
         }else{
             $error = "เกิดข้อผิดพลาด";
@@ -109,7 +118,6 @@ else{
     }
 }
 }
-
 ?>
 
 <?php if(isset($_SESSION['error'])): ?>
@@ -234,6 +242,7 @@ else{
                 oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                 <?php if(isset($errors['phone'])): ?>
                 <div class="text-danger"><?= $errors['phone'] ?></div>
+                
                 <?php endif; ?>
                 
                 <button
@@ -248,7 +257,6 @@ else{
         </div>
 
         </div>
-
     </div>
 </section>
 

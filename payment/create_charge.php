@@ -22,11 +22,13 @@ $amount = 0;
 $package_id = null;
 
 /* ===== WALLET ===== */
-if(isset($_GET['amount'])){
+if(isset($_GET['amount']) && !isset($_GET['package_id'])){
     $amount = floatval($_GET['amount']);
+
     if($amount < 10){
         die("invalid amount");
     }
+
     $type = 'wallet';
 }
 
@@ -44,7 +46,13 @@ if(isset($_GET['package_id'])){
         die("package not found");
     }
 
-    $amount = $pkg['price'];
+    // 🔥 ใช้ราคาจาก checkout (รวม discount แล้ว)
+    if(isset($_GET['amount'])){
+        $amount = floatval($_GET['amount']);
+    } else {
+        $amount = $pkg['price'];
+    }
+
     $type = 'package';
 }
 
@@ -52,6 +60,11 @@ if(isset($_GET['package_id'])){
 if(!$type){
     die("invalid request");
 }
+
+/* =========================
+   GET DISCOUNT FROM SESSION
+========================= */
+$discount_code = $_SESSION['checkout']['discount_code'] ?? null;
 
 /* =========================
    CREATE CHARGE
@@ -63,7 +76,8 @@ $charge = OmiseCharge::create([
     'metadata' => [
         'type' => $type,
         'user_id' => $user_id,
-        'package_id' => $package_id
+        'package_id' => $package_id,
+        'discount_code' => $discount_code
     ]
 ]);
 
@@ -73,17 +87,18 @@ $charge_id = $charge['id'];
    SAVE PAYMENT
 ========================= */
 $stmt = $conn->prepare("
-INSERT INTO payments (user_id, charge_id, amount, type, package_id, status)
-VALUES (?, ?, ?, ?, ?, 'pending')
+INSERT INTO payments (user_id, charge_id, amount, type, package_id, status, discount_code)
+VALUES (?, ?, ?, ?, ?, 'pending', ?)
 ");
 
 $stmt->bind_param(
-    "isdsi",
+    "isdsss",
     $user_id,
     $charge_id,
     $amount,
     $type,
-    $package_id
+    $package_id,
+    $discount_code
 );
 
 $stmt->execute();

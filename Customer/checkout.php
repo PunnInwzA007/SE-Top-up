@@ -135,7 +135,7 @@ if(isset($_POST['confirm'])){
     $_SESSION['checkout']['uid'] = $uid;
 
     // 👉 ไป QR
-    header("Location: ../payment/create_charge.php?package_id=".$package_id);
+    header("Location: ../payment/create_charge.php?package_id=".$package_id."&amount=".$total_price);
     exit;
 }
 }
