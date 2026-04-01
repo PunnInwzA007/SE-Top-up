@@ -83,7 +83,7 @@ if(isset($_POST['go_checkout'])){
       $_SESSION['checkout']['uid'] = $uid;
       $_SESSION['checkout']['discount'] = $price; // ฟรี 100%
       $_SESSION['checkout']['redeem_code'] = $code;
-
+      $_SESSION['checkout']['payment_method'] = 'wallet';
       header("Location: checkout.php");
       exit;
     }
