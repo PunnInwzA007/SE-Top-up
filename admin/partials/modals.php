@@ -113,7 +113,7 @@
           name="image"
           class="form-control"
           accept="image/png, image/jpeg, image/jpg,"
-          required>
+          >
 
         </div>
 
@@ -218,8 +218,8 @@
           <input type="file"
                  name="image"
                  class="form-control"
-                 accept="image/png, image/jpeg, image/jpg,">
-                 required>
+                 accept="image/png, image/jpeg, image/jpg,"
+                required>
 
         </div>
 
